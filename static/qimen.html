@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>奇门练习 · 天盘干加地盘干八十一格</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ===== 奇门练习页专属样式 ===== */
+.quiz-q{display:flex;align-items:center;justify-content:center;gap:26px;margin:30px 0 8px;flex-wrap:wrap}
+.stem-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.stem-label{font-size:12.5px;color:var(--muted);letter-spacing:.3em;text-indent:.3em}
+.stem{font-family:var(--kai);font-size:64px;line-height:1;width:96px;height:96px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1.5px solid var(--ink);border-radius:10px;box-shadow:2px 2px 0 rgba(0,0,0,.5)}
+.plus{font-size:30px;color:var(--gold);font-family:var(--kai)}
+.q-suffix{width:100%;color:var(--ink-soft);font-size:15px;letter-spacing:.2em;margin-top:2px}
+
+details.geju-all{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 24px}
+details.geju-all summary{cursor:pointer;padding:14px 0;font-family:var(--kai);font-size:18px;letter-spacing:.15em;color:var(--ink-soft);list-style:none;display:flex;align-items:center;gap:10px}
+details.geju-all summary::before{content:"◆";color:var(--gold);font-size:11px}
+details.geju-all[open] summary{border-bottom:1px dashed var(--line);margin-bottom:14px}
+.geju-cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:14px;padding-bottom:18px}
+.gcol h4{font-size:13px;color:var(--cinnabar);letter-spacing:.2em;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:8px}
+.grow{display:flex;align-items:center;width:100%;background:none;border:none;font-family:inherit;font-size:12.5px;color:var(--ink-soft);line-height:1.9;text-align:left;padding:3px 2px;border-radius:5px;cursor:pointer;transition:.12s}
+.grow b{display:inline-block;min-width:1.5em;margin-right:7px;color:var(--ink);font-weight:600}
+.grow:hover{color:var(--cinnabar);background:rgba(224,101,80,.08)}
+.grow:hover b{color:var(--cinnabar)}
+.geju-tip{padding-bottom:14px;font-size:12px;color:var(--muted);letter-spacing:.06em}
+
+/* ===== 详情弹窗 ===== */
+.modal-mask{position:fixed;inset:0;background:rgba(4,8,14,.65);display:flex;align-items:center;justify-content:center;padding:24px;z-index:50}
+.modal-mask[hidden]{display:none}
+.modal-card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:580px;width:100%;max-height:82vh;overflow:auto;padding:30px 34px 26px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.modal-close{position:absolute;top:12px;right:14px;width:30px;height:30px;background:none;border:none;font-size:17px;color:var(--muted);cursor:pointer;border-radius:6px;transition:.15s}
+.modal-close:hover{color:var(--cinnabar);background:rgba(224,101,80,.08)}
+.modal-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.m-combo{font-family:var(--kai);font-size:16px;color:var(--ink-soft)}
+.m-name{font-family:var(--kai);font-size:27px;color:var(--cinnabar);letter-spacing:.08em}
+.modal-body{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px}
+.m-desc{font-size:14.5px;color:var(--ink);line-height:2}
+.modal-body h5{margin:16px 0 6px;font-family:var(--kai);font-size:16px;font-weight:600;letter-spacing:.25em;color:var(--ink-soft)}
+.modal-body h5::before{content:"◆";font-size:10px;color:var(--gold);margin-right:8px;vertical-align:2px}
+.m-detail{font-size:14px;color:var(--ink-soft);line-height:2.1;text-align:justify}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="seal">遁</div>
+  <h1>奇门遁甲</h1>
+  <div class="sub">天盘干加地盘干 · 八十一格</div>
+  <div class="divider">❖</div>
+  <nav>
+    <a href="index.html">首　页</a>
+    <a href="#">卦象知识</a>
+    <a class="active" href="qimen.html">奇门练习</a>
+    <a href="changsheng.html">长生练习</a>
+    <a href="#">卦爻练习</a>
+    <a href="#">占筮记录</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section>
+    <div class="sec-title"><h2>干加格局问答</h2><span class="tag">随机练习</span></div>
+    <p class="sec-desc">奇门遁甲以乙丙丁三奇与戊己庚辛壬癸六仪分布于天、地两盘，天盘之干加临地盘之干，纵横相乘，共成八十一格，谓之「十干克应」。甲遁于六仪之下而不入格，故以九干计。请依给定组合，选出正确的格局之名。</p>
+
+    <div class="card quiz-card">
+      <div class="quiz-stats">第 <b id="q-num">1</b> 题 · 答对 <b id="q-right">0</b> / <span id="q-total">0</span> · 连对 <b id="q-streak">0</b></div>
+      <div class="quiz-q">
+        <div class="stem-box"><span class="stem-label">天盘</span><span class="stem" id="stem-t">乙</span></div>
+        <div class="plus">＋</div>
+        <div class="stem-box"><span class="stem-label">地盘</span><span class="stem" id="stem-d">丙</span></div>
+        <div class="q-suffix">此局名为何格？</div>
+      </div>
+      <div class="quiz-opts" id="opts"></div>
+      <div class="quiz-fb" id="fb"></div>
+      <div class="quiz-actions"><button id="btn-next" class="btn-primary" hidden>下一题（回车）</button></div>
+      <div class="quiz-tip">提示：按 1–4 或 A–D 作答，回车进入下一题</div>
+    </div>
+  </section>
+
+  <section>
+    <details class="geju-all" id="geju-all">
+      <summary>八十一格总览（点此展开查阅）</summary>
+      <div class="geju-cols" id="geju-cols"></div>
+      <div class="geju-tip">※ 点击任一格，可查看该格原文与详解</div>
+    </details>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="m">观天之道，执天之行，尽矣。</div>
+  <div>易经研习 · 奇门遁甲八十一格练习</div>
+</footer>
+
+<!-- 格局详情弹窗 -->
+<div class="modal-mask" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modal-close" title="关闭">✕</button>
+    <div class="modal-head" id="modal-head"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ===== 数据：t=天盘干，d=地盘干，name=格局名，desc=克应原文，detail=详解 ===== */
+const STEMS = ['乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const GEJU = [
+  /* 天盘乙 */
+  {t:'乙',d:'乙',name:'日奇伏吟',desc:'不宜见上级领导、贵人。求名求利及进取事不可求，只宜安分守己。',
+   detail:'乙为日奇、阴木。两乙重叠、上下同气，象征人事重复、原地徘徊，故为伏吟之象。伏吟主静不宜动：求见贵人、谋求进取皆难成，唯安分守己、静待时机为上；测事多为旧事重提、老问题反复出现。'},
+  {t:'乙',d:'丙',name:'奇仪顺遂',desc:'吉星加官进职，凶星夫妻反目离别。',
+   detail:'乙为日奇、丙为月奇，日月交辉，又乙木生丙火，上下相生，故名奇仪顺遂。主诸事顺遂、事半功倍：逢吉星主加官进职、贵人提携；若值凶星，则应在夫妻男女之事上，主反目离别——乙木为妻室，火炎则木焦。'},
+  {t:'乙',d:'丁',name:'奇仪相佐',desc:'最利文书，考试，百事可为。',
+   detail:'乙丁同为三奇，乙木生丁火，如日生星光，相互佐助。丁主文书、信息、文章，故最利考试、求职文书、签订合同之事，谋望多成，百事可为。'},
+  {t:'乙',d:'戊',name:'阴害阳门',desc:'利于阴人阴事，不利于阳人阳事，门吉尚可谋为，门凶门迫则破财伤人。',
+   detail:'乙为阴木，戊为阳土，阴干乘阳干之上而克之，故曰阴害阳门，主暗中作梗、明松暗紧之局。占事利于阴人阴事（女子、暗中之谋、私密之事），不利公开进取；若门吉尚可谋为，门凶门迫则主破财伤人，须防背后暗算。'},
+  {t:'乙',d:'己',name:'日奇入墓',desc:'被土暗昧、门凶事必凶。',
+   detail:'己为卑湿暗昧之土，乙木入之如日入昏雾，光华被掩，故名日奇入墓。主才智受蒙蔽、有志难伸，事多暗昧不明；若值凶门，事必凶险，宜静守不宜强争。'},
+  {t:'乙',d:'庚',name:'日奇被刑',desc:'为争讼财产，夫妻怀有私意。',
+   detail:'庚为太白刑杀之金，乙庚相合，日奇被合绊牵制，如人受刑束缚。主因财产而起争讼，夫妻之间各怀私意、同床异梦；谋事宜明察财产、文书之纠纷。'},
+  {t:'乙',d:'辛',name:'青龙逃走',desc:'人亡财破，奴仆拐带，六畜皆伤，测婚姻为女逃男。',
+   detail:'辛为白虎之金，克乙木，青龙受制而遁逃，故名。主破财伤身、奴仆下属拐带财物而逃、六畜有损；测婚姻则女逃男，感情难留。此为有名之凶格，不宜进取。'},
+  {t:'乙',d:'壬',name:'日奇入天罗',desc:'尊婢悖乱，官讼是非，有人谋害之事。',
+   detail:'壬为天罗荡漾之水，乙木入水漂荡无根，如陷罗网。主尊卑失序、婢仆欺主，官讼是非缠身，更防有人暗中谋害；行事宜谨慎低调。'},
+  {t:'乙',d:'癸',name:'日奇入地网',desc:'宜退不宜进，隐匿藏形，躲灾避难为吉。',
+   detail:'癸为地网，日奇入网，进退皆受牵制。此局宜退不宜进：隐匿藏形、躲灾避难则吉，强进必遭罗网之困；测出行、谋事以止为佳。'},
+  /* 天盘丙 */
+  {t:'丙',d:'乙',name:'日月并行',desc:'公谋私为皆为吉。',
+   detail:'丙为月奇、乙为日奇，日月并行于天，木火相生，光明交映。主吉：公门谋事、私下行事皆顺遂，贵人相助，谋望有成。'},
+  {t:'丙',d:'丙',name:'月奇悖师',desc:'文书逼迫，破耗遗失。主单据、票证、不明遗失。',
+   detail:'两丙重叠，火气炎盛而成悖乱，故名月奇悖师。悖者，违乱也。主文书逼迫、反复修改，单据、票证、财物不明遗失；火多则燥，行事宜防急躁出错。'},
+  {t:'丙',d:'丁',name:'星奇朱雀',desc:'贵人文书吉利，常人平静安乐，得三吉门为天遁。',
+   detail:'丙丁皆火，月奇与星奇比肩相助，朱雀主文书音信。主吉：贵人得文书之喜，常人平静安乐；若配合开、休、生三吉门，则为「天遁」吉格，百事亨通。'},
+  {t:'丙',d:'戊',name:'飞鸟跌穴',desc:'事业可为，可谋大事。',
+   detail:'丙为飞鸟（朱雀之象），落临戊土之上，如飞鸟跌入巢穴，得其所哉。此为大吉之格：动作大吉，可谋大事，求名求利、出行动作皆宜，谋望十有九成。'},
+  {t:'丙',d:'己',name:'火悖入刑',desc:'囚人刑杖，文书不行，吉门尚吉、凶门转凶。',
+   detail:'己为勾陈之土，晦丙火之光，火入刑地。主囚人受刑杖、文书停滞不行；若门吉尚可维持，门凶则吉事转凶，宜防牵连纠缠之事。'},
+  {t:'丙',d:'庚',name:'荧入太白',desc:'贼必去。门户破败，盗贼耗失，事业亦凶。',
+   detail:'丙为荧惑（火星），庚为太白（金星），荧惑入太白，火克金，兵戈之象。古云「贼必去」：盗贼将去而扰害之门已开。主门户破败、盗贼耗失，事业亦凶，须防失窃与争斗。'},
+  {t:'丙',d:'辛',name:'日月相会',desc:'谋事成就，病人不凶。',
+   detail:'丙辛相合，如日月相会于天，光华相映而不相害。主吉：谋事成就，合作有成，病人亦不为凶；宜携手共事、缔结盟约。'},
+  {t:'丙',d:'壬',name:'火入天罗',desc:'为客不利、是非颇多。',
+   detail:'壬为天罗之水，丙火入水，光明受制。主为客不利——主动出击、外出谋事者受损，是非口舌颇多；宜守常不出，静观其变。'},
+  {t:'丙',d:'癸',name:'月奇地网',desc:'阴人害事，灾祸频生，凡事暗昧不明。',
+   detail:'癸为地网，月奇入网，明入于暗。主阴人（女性、暗中势力）害事，灾祸频生，凡事暗昧不明、事多牵扯；宜明哲保身，勿涉暗事。'},
+  /* 天盘丁 */
+  {t:'丁',d:'乙',name:'人遁吉格',desc:'贵人加官进爵，常人婚姻财产财帛有喜。',
+   detail:'丁为星奇玉女，得乙木相生，如星光得扶，人得自助，故名人遁。主吉：贵人加官进爵，常人婚姻团圆、财产兴旺，百事有喜。'},
+  {t:'丁',d:'丙',name:'星随月转',desc:'贵人越级高升，常人乐极生悲。',
+   detail:'丁为星、丙为月，星随月转，火势借势而旺。主变动中的荣升：贵人可越级高升、一跃而起；常人则防乐极生悲——势盛之时最忌得意忘形。'},
+  {t:'丁',d:'丁',name:'星奇入太阴',desc:'文书证件即至，喜事从心，万事如意。',
+   detail:'两丁比和，星奇得位入太阴之乡，光华内敛而发。主文书证件即至、喜事从心、万事如意，尤其利文书、证照、消息之应。'},
+  {t:'丁',d:'戊',name:'青龙转光',desc:'官人升迁，常人威昌。',
+   detail:'戊为青龙，得丁火相生照亮，如青龙转放光明。主吉：官人升迁、常人威势昌盛，谋事借光而起；利见贵人、求名显达。'},
+  {t:'丁',d:'己',name:'火入勾陈',desc:'奸私仇怨，事因女人。',
+   detail:'己为勾陈，主田土纠缠、牵连勾留，丁火入之不明。主奸私仇怨之事，且多因女人而起；测事防情感纠葛、暗昧牵连。'},
+  {t:'丁',d:'庚',name:'星奇受阻',desc:'文书阻隔，行人必归。',
+   detail:'丁火克庚金，文书之神遇刑杀之金，受阻之象。主文书阻隔、音信迟滞；然庚主道路行人，阻隔既久反而行人必归——坏事之中自有转机。'},
+  {t:'丁',d:'辛',name:'朱雀入狱',desc:'罪人失囚，官人失位。',
+   detail:'辛为天狱、罪人之金，丁为朱雀文书，入狱则文字受制。主罪人失囚、官人失位，测文书、考试、官职之事不利，防因文书词讼而惹祸。'},
+  {t:'丁',d:'壬',name:'奇仪相合',desc:'贵人恩诏，诉狱公平。',
+   detail:'丁壬相合，阴阳相配，如恩诏下达。主贵人恩宠有加、狱讼得公平之判；合作、婚恋之事亦相合有成。'},
+  {t:'丁',d:'癸',name:'朱雀投江',desc:'文书口舌是非，经官动府、词诉不利，音信沉溺不到。',
+   detail:'癸为玄武之水，丁火入水如朱雀投江，光息声沉。主文书口舌是非、经官动府而词诉不利，音信沉溺不到；测消息则石沉大海，宜退避是非。'},
+  /* 天盘戊 */
+  {t:'戊',d:'乙',name:'青龙合会',desc:'门吉事吉，门凶事也凶。',
+   detail:'戊为青龙，得乙奇相会（甲乙同气），青龙得助。主吉凶随门而定：门吉则事吉、合作有成，门凶则事凶、相助无力——此格本身为会合之象，成与不成看吉门生扶。'},
+  {t:'戊',d:'丙',name:'青龙返首',desc:'动作大吉，但若逢门迫、入墓、击刑，则吉事成凶。',
+   detail:'戊为青龙，丙火生之，青龙回头返首，如倦鸟归巢、贵人回头相助。此为奇门最吉之格之一：动作大吉，谋事可成；唯逢门迫、入墓、击刑时，吉事反成凶，须查全局。'},
+  {t:'戊',d:'丁',name:'青龙耀明',desc:'宜见上级领导,贵人，求功名，为事吉利，若值墓迫，招惹是非。',
+   detail:'丁火照亮青龙，故名耀明。主吉：宜见上级领导、贵人，求功名、谋升迁大吉；若值墓迫，则光明被掩，反招惹是非，得意时仍须谨慎。'},
+  {t:'戊',d:'戊',name:'伏吟',desc:'凡事不利，道路闭塞，以守为好。',
+   detail:'两戊重叠，青龙困于原地，上下无变，故为伏吟。凡事不利，道路闭塞，行动受阻；以守为好，静待时机，妄动徒劳无功。'},
+  {t:'戊',d:'己',name:'贵人入狱',desc:'公私皆不利。',
+   detail:'己为暗昧牢狱之土，青龙戊土入之，如贵人落难入狱。主公私皆不利：贵事难成，权势受困，谋望多阻；宜守份待时。'},
+  {t:'戊',d:'庚',name:'值符飞宫',desc:'吉事不吉，凶事更凶，求财没利益，测病也主凶。同时，甲庚相冲，飞宫也主换地方。',
+   detail:'值符遁于戊下，庚金冲克甲木（甲庚相冲），值符被迫飞离本宫，故名值符飞宫。主吉事不吉、凶事更凶，求财无益、测病主凶；又主换地方、换环境——此地不宜久留，另寻出路反有转机。'},
+  {t:'戊',d:'辛',name:'青龙折足',desc:'吉门有生助，尚能谋事; 若逢凶门，主招灾，失财或有足疾、折伤。',
+   detail:'戊为青龙，辛金乘之泄其气，如龙折足，行动失利。若吉门有生助，尚能谋事；逢凶门则主招灾、失财，或有足疾、折伤之应，出行尤须小心。'},
+  {t:'戊',d:'壬',name:'青龙入天牢',desc:'凡阴阳事皆不吉利。',
+   detail:'壬为天牢之水，青龙入牢，英雄落网。凡阴阳事皆不吉利：求谋受阻、权柄受制，宜安分守常，勿妄求进取。'},
+  {t:'戊',d:'癸',name:'青龙华盖',desc:'又戊癸相合，故逢吉门为吉，可招福临门; 逢凶门，事多不利，为凶。',
+   detail:'戊癸相合，如青龙得华盖庇佑。逢吉门为吉，可招福临门、贵人荫庇；逢凶门则事多不利，合中藏变，吉凶须看门与星的配合。'},
+  /* 天盘己 */
+  {t:'己',d:'乙',name:'墓神不明',desc:'戌为乙木之墓，已又为地户故名墓神不明，地户逢星，宜遁迹隐形为利。',
+   detail:'己为地户暗土，乙木入之为墓，墓神昏昧难辨。此格宜遁迹隐形、藏身守拙为利；测事则前程昏暗不明，宜暂避锋芒，不宜张扬进取。'},
+  {t:'己',d:'丙',name:'火悖地户',desc:'男人冤冤相害，女人必至淫污。',
+   detail:'丙火入己土，光明入于暗户，火气悖乱。主男女之害：男人冤冤相害、纠缠不休，女人则防淫污之嫌、名节受损；测感情、隐私之事尤凶。'},
+  {t:'己',d:'丁',name:'朱雀入狱',desc:'文书词讼，先曲后直。',
+   detail:'丁为朱雀文书，入己土牢狱，文书受困。主文书词讼之事，先曲后直——起初受冤受阻，最终得以昭雪；过程周折，宜耐心应对。'},
+  {t:'己',d:'戊',name:'犬遇青龙',desc:'门吉为谋望遂意，上人见喜。若门凶，枉费心机。',
+   detail:'己为卑土如犬，戊为青龙之尊，卑遇尊而相得。门吉则谋望遂意、上人（上司长辈）见喜，得提携之机；门凶则枉费心机，攀附无门。'},
+  {t:'己',d:'己',name:'地户逢鬼',desc:'病者发凶或必死，百事不遂暂不谋为，谋为则凶。',
+   detail:'两己阴土重叠于地户，阴气沉沉，如地户逢鬼。主病者发凶甚至有死险，百事不遂；暂不宜谋为，强行谋为则凶，宜静养回避。'},
+  {t:'己',d:'庚',name:'刑格返名',desc:'词讼先动者不利，如临凶星，则有谋害之情。',
+   detail:'庚为刑杀之金，加于己土之上，金得土生而刑气更厉，故名刑格返名。主词讼之事，先动者不利——先告状者反受其害；若临凶星，更有被人谋害之嫌。'},
+  {t:'己',d:'辛',name:'游魂入墓',desc:'易招阴邪鬼魅作祟。',
+   detail:'辛为白虎游魂之金，入己土之墓，阴气归穴。主易招阴邪鬼魅作祟，测病多为邪病、梦魇缠身；宜静养正气，避开阴地。'},
+  {t:'己',d:'壬',name:'地网高张',desc:'狡童佚女，奸情伤杀，凡事不吉，谋为不利。',
+   detail:'壬水荡于己土之上，如地网高张，插翅难逃。主狡童佚女、奸情伤杀之应，凡事不吉、谋为不利；测官司、私情之事最凶，宜谨言慎行。'},
+  {t:'己',d:'癸',name:'地刑玄武',desc:'男女疾病垂危，有四狱词讼之灾。',
+   detail:'癸为玄武，主盗贼暗昧，己癸相刑于地户。主男女疾病垂危，有牢狱词讼之灾；防暗算、失窃与阴私之祸。'},
+  /* 天盘庚 */
+  {t:'庚',d:'乙',name:'太白逢星',desc:'退吉进凶，谋为不利。',
+   detail:'庚为太白之金，克乙木，然乙庚相合，刑中有合。主退吉进凶：退守则两不相伤，强进则惹动刑杀；谋为不利，凡事以让为高。'},
+  {t:'庚',d:'丙',name:'太白入荧',desc:'贼必来，为客进利，为主破财。',
+   detail:'庚为太白，丙为荧惑，金入火乡而贼势张，古云「贼必来」。主盗贼来临、小人侵扰：为客（主动出击方）进利，为主（被动防守方）破财；宜先发制人，不宜坐等。'},
+  {t:'庚',d:'丁',name:'亭亭之格',desc:'因私匿或男女关系起官司是非门吉有救; 门凶，事必凶。',
+   detail:'庚金加丁火，金火相战于隐微之间，故名亭亭之格。主因私匿之事或男女关系而起官司是非；门吉有救，门凶则事必凶。防桃色纠纷牵连公事。'},
+  {t:'庚',d:'戊',name:'天乙伏宫',desc:'百事不可谋，大凶。此地不如他地，此人不如他人。',
+   detail:'庚金加于戊土青龙之上，天乙之贵受伏于宫中，彼此相制不容。大凶之格：百事不可谋，求名求财皆无望；此地不如他地、此人不如他人——宜果断更换环境与协作之人。'},
+  {t:'庚',d:'己',name:'官府刑格',desc:'主有官司口舌，因官讼被判刑住牢狱更凶，百事不利。',
+   detail:'庚金入己土牢狱之乡，刑格已成。主有官司口舌，因官讼而被判刑入狱者更凶，百事不利；凡事守法循规，勿触法网。'},
+  {t:'庚',d:'庚',name:'太白同宫',desc:'又名战格，官灾横祸。兄弟或同辈朋友相冲撞，不利为事。',
+   detail:'两庚金重叠，白虎相聚，又名战格。主官灾横祸，兄弟或同辈朋友相冲撞、竞争激烈；不宜合伙共事，两虎相争必有一伤，凡事以和为贵。'},
+  {t:'庚',d:'辛',name:'白虎干格',desc:'不宜远行，远行车折马伤，求财更为大凶。',
+   detail:'庚辛皆金，白虎干格，肃杀之气极盛。不宜远行：远行车折马伤，途中多险；求财更为大凶；测病主筋骨伤损。'},
+  {t:'庚',d:'壬',name:'移荡格',desc:'上格又名小格。金化水流，主远行迷失道路，男女音信难通。',
+   detail:'庚金化于壬水，金白水清而流荡不定，又名小格。主远行迷失道路、男女音信难通；人事多迁转流动，居所、职业易变，谋事难安于一。'},
+  {t:'庚',d:'癸',name:'大格',desc:'故多主车祸，行人不至，官司不止，生育母子具伤。',
+   detail:'庚金落于癸水，格阻不通，为大格。主车祸之应、行人不至、官司不止；测生育则母子俱伤。此格诸事皆凶，出行、诉讼、生产尤须大忌。'},
+  /* 天盘辛 */
+  {t:'辛',d:'乙',name:'白虎猖狂',desc:'家败人亡，出行有惊忍，远行多灾殃，尊长不喜，车船俱伤。',
+   detail:'辛为白虎之金，克乙木，虎入林而猖狂。主家败人亡之险、出行有惊恐，远行多灾殃，尊长不喜，车船俱伤；测婚姻女逃男，凡事不宜妄动。'},
+  {t:'辛',d:'丙',name:'干合悖师',desc:'荧惑出现，占雨无，占晴旱，占事必因"财"致讼。',
+   detail:'丙辛相合，本为吉合，然荧惑（丙火）在侧生悖，合处逢悖，故名干合悖师。占天时：占雨无雨、占晴反旱；占人事：必因「财」致讼——合作生财反成争讼之源，钱财往来须先明账目。'},
+  {t:'辛',d:'丁',name:'狱神得奇',desc:'经商求财获利倍增，四人逢天赦释免。',
+   detail:'辛为狱神，丁为星奇，狱神得奇星相照，囚中有救。主经商求财获利倍增，囚人逢天赦而释免；困顿之中忽得生机，利经营、利脱困。'},
+  {t:'辛',d:'戊',name:'困龙被伤',desc:'主官司破财，屈抑守分尚可，妄动则带来祸殃。',
+   detail:'戊为青龙，辛金乘土泄其气，龙困而受伤。主官司破财；屈抑守分尚可保全，妄动则带来祸殃——逆境中忍耐为上，强争必损。'},
+  {t:'辛',d:'己',name:'入狱自刑',desc:' 辛为罪人，成为午火之墓，故为入狱自刑，主奴仆背主，有苦诉讼难伸。',
+   detail:'辛为罪人，入己土牢狱，如囚自陷囹圄，故为入狱自刑。主奴仆背主、下属背叛，有苦难言、诉讼难伸；凡事反躬自省，勿怨天尤人。'},
+  {t:'辛',d:'庚',name:'白虎出力',desc:' 刀刃相交，主客相残逊让退步则安，强进血溅衣衫。',
+   detail:'庚辛两金相交，如白虎出力、刀刃相交，主客相残之象。逊让退步则安然无事，强进则血溅衣衫；争执宜和解，斗殴必两伤。'},
+  {t:'辛',d:'辛',name:'伏吟天庭',desc:'公废私就，讼狱自罗罪名。',
+   detail:'两辛重叠于天庭，罪人聚于公门。主公废私就——公务荒废而营私，讼狱自罗罪名；防因私废公、自招官非，宜清廉自守。'},
+  {t:'辛',d:'壬',name:'凶蛇入狱',desc:'因为王为凶蛇，辛为牢狱，故名。两男争女，一货售两家、讼狱不息，先动失理，利主不利客。',
+   detail:'壬为凶蛇，辛为牢狱，蛇入狱中纠缠不休。主两男争女、一货售两家之事，讼狱不息；先动者失理，利主不利客——宜守，勿抢先争执。'},
+  {t:'辛',d:'癸',name:'天牢华盖',desc:'日月失明，误入天网，动止乖张。',
+   detail:'辛为天牢，癸为华盖天网，牢网相加。主日月失明、误入天网，动止乖张、进退失据；测事昏晦不明，宜谨慎自守，防误入歧途。'},
+  /* 天盘壬 */
+  {t:'壬',d:'乙',name:'小蛇得势',desc:'女人柔顺，男人通达，测孕育生子、禄马光华。',
+   detail:'壬为腾蛇之水，得乙木泄秀相生，如小蛇得势而灵动。主女人柔顺、男人通达，测孕育主生子，禄马光华；又主善于配合他人、借势而起，利合作。'},
+  {t:'壬',d:'丙',name:'水蛇入火',desc:'因为壬丙相冲克，故三官灾刑禁，络绎不绝，主两败俱伤，为客不利。',
+   detail:'壬丙相冲克，水蛇入火乡，水火交战、两败俱伤。主官灾刑禁络绎不绝，为客不利——主动挑起事端者反受其害；宜避争斗，勿轻易出头。'},
+  {t:'壬',d:'丁',name:'干合蛇刑',desc:'文书牵连，贵人匆匆，男吉女凶。',
+   detail:'丁壬相合，然壬水蛇性缠绕，合中带刑。主文书牵连、贵人匆匆而过不得力；男吉女凶——男性尚可周旋，女性则防纠缠之害。'},
+  {t:'壬',d:'戊',name:'小蛇化龙',desc:'男人发达，女产婴童，做事要防耗散。',
+   detail:'壬水得戊土承载，如小蛇化龙、平步青云。主男人发达、女产婴童，喜事临门；唯做事须防耗散——兴盛之时防破耗，聚财宜守。'},
+  {t:'壬',d:'己',name:'反吟蛇刑',desc:'主官司败诉，大祸将至，顺守为吉，妄动必凶。',
+   detail:'己土克壬水，上下相冲为反吟，蛇受刑而躁动。主官司败诉、大祸将至；顺守为吉，妄动必凶——此局以静制动、以退为进为上策。'},
+  {t:'壬',d:'庚',name:'太白擒蛇',desc:'因庚为太白，壬为蛇，主刑狱公平，立判邪正。',
+   detail:'庚为太白金星，壬为蛇，金水相生，如太白擒蛇归正，邪正立判。主刑狱公平，官司得直；测事是非分明、贵人明断，利伸冤辩白。'},
+  {t:'壬',d:'辛',name:'腾蛇相缠',desc:'纵得吉门，亦不安。如有谋望，被人欺瞒。',
+   detail:'辛金乘壬水，蛇缠金链，纠缠不清。纵得吉门亦不安宁，如有谋望，必被人欺瞒；防口是心非之徒，勿轻信许诺。'},
+  {t:'壬',d:'壬',name:'天狱自刑或蛇入地罗',desc:'壬为天罗又名天狱，辰辰自刑，故名。',
+   detail:'壬为天罗天狱，两壬重叠如辰辰自刑，自设罗网自缠身，又名蛇入地罗。主自我纠结、进退皆疑，祸由己出而非天降；宜放下执念，勿钻牛角尖。'},
+  {t:'壬',d:'癸',name:'幼女奸淫',desc:'主有家丑外扬之事发生;门吉星凶，反福为祸。',
+   detail:'壬癸皆阴水，私昧之象交并，如幼女失防。主有家丑外扬之事发生；门吉星凶，反福为祸——外表平顺而内藏隐忧，家门之内宜勤加管束、谨防阴私。'},
+  /* 天盘癸 */
+  {t:'癸',d:'乙',name:'华盖逢星',desc:'贵人禄位，常人平安。',
+   detail:'癸为华盖之水，得乙木相生泄秀，如华盖逢吉星。主贵人得禄位、常人保平安；才华内蕴而得展现之机，利文艺、宗教、清贵之事。'},
+  {t:'癸',d:'丙',name:'华盖悖师',desc:'贵贱逢之皆不利，唯上人见喜。',
+   detail:'癸水克丙火，华盖遮月，光明被掩。主贵贱逢之皆不利，唯上人（上司、长辈）见喜——居高者得荫护，居下者受压制；宜顺上而不争。'},
+  {t:'癸',d:'丁',name:'腾蛇天矫',desc:'文书官司，火焚也逃不掉，虚惊不宁。',
+   detail:'癸水克丁火，蛇缠星火、夭矫挣扎，文书之光将熄。主文书官司、火焚之灾难逃，虚惊不宁；防文件失误、火灾虚惊，宜早作检点。'},
+  {t:'癸',d:'戊',name:'天乙合会',desc:'吉门宜求财，婚姻喜美，吉人赞助成合。若门凶迫制，反祸官非。',
+   detail:'戊癸相合，天乙贵人和合相会。吉门宜求财、婚姻喜美、吉人赞助成合；若门凶迫制，反祸官非——合之吉凶，全系于门，成局先察吉凶门。'},
+  {t:'癸',d:'己',name:'华盖地户',desc:'男女测之，音信皆阻，躲灾避难方为吉。',
+   detail:'癸华盖加己地户，天网地网皆暗。主男女测之音信皆阻，消息不通、谋望难达；躲灾避难方为吉，宜藏不宜露。'},
+  {t:'癸',d:'庚',name:'太白入网',desc:'主以暴力争讼，自罹(li 二声)罪责。由于寅申相冲相刑，所以凡事无成，吉事也易成空。',
+   detail:'庚金入癸水之网，金沉水底，太白失势。主以暴力争讼、自罹罪责；因寅申相冲相刑，凡事无成，吉事也易成空——强硬对抗反遭其祸，宜以柔化解。'},
+  {t:'癸',d:'辛',name:'网盖天牢',desc:'主官司败诉，死罪难兆。测病，亦大凶。',
+   detail:'癸为天网，辛为天牢，网盖牢上，双重禁锢。主官司败诉、死罪难逃，测病亦大凶；此为诸格中大凶者，凡事宜退让求和，勿以身试法。'},
+  {t:'癸',d:'壬',name:'复见腾蛇',desc:'癸水、壬水均为水蛇，主嫁娶重婚，后嫁无子，不保年华。',
+   detail:'癸壬皆水蛇，前后复见，蛇影重重。主嫁娶重婚、后嫁无子、不保年华；感情之事反复纠缠、旧事重演，宜断则断，勿泥足深陷。'},
+  {t:'癸',d:'癸',name:'天网四张',desc:'主行人失伴，病讼皆伤。天网四张不可谋事，只宜退避。如果强行谋事，不仅无成，还会带来凶灾。',
+   detail:'两癸重叠，天网四张，罗网弥漫。主行人失伴、病讼皆伤；天网四张不可谋事，只宜退避——强行谋事不仅无成，还会带来凶灾。古人云可「结网而退」，向低处、暗处暂避为上。'},
+];
+
+/* ===== 练习逻辑 ===== */
+const optsEl = document.getElementById('opts');
+const fbEl   = document.getElementById('fb');
+const btnNext = document.getElementById('btn-next');
+let current = null, locked = false, qn = 0, answered = 0, right = 0, streak = 0;
+
+const shuffle = a => {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+function updateStats(){
+  document.getElementById('q-right').textContent = right;
+  document.getElementById('q-total').textContent = answered;
+  document.getElementById('q-streak').textContent = streak;
+}
+
+function newQuestion(){
+  qn++;
+  locked = false;
+  fbEl.className = 'quiz-fb';
+  fbEl.innerHTML = '';
+  btnNext.hidden = true;
+  document.getElementById('q-num').textContent = qn;
+
+  current = GEJU[Math.floor(Math.random() * GEJU.length)];
+  document.getElementById('stem-t').textContent = current.t;
+  document.getElementById('stem-d').textContent = current.d;
+
+  /* 干扰项：从其余格局名中取 3 个不重复的 */
+  const pool = [...new Set(GEJU.map(g => g.name))].filter(n => n !== current.name);
+  const options = shuffle([current.name, ...pool.slice(0, 3)]);
+  optsEl.innerHTML = options.map((n, i) =>
+    `<button class="opt" data-i="${i}" data-name="${n}"><span class="kbd">${'ABCD'[i]}</span>${n}</button>`
+  ).join('');
+  optsEl.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => pick(+b.dataset.i)));
+}
+
+function pick(i){
+  if (locked) return;
+  locked = true;
+  answered++;
+  const btns = [...optsEl.querySelectorAll('.opt')];
+  const ok = btns[i].dataset.name === current.name;
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.dataset.name === current.name) b.classList.add('correct');
+  });
+  if (ok) { right++; streak++; }
+  else    { streak = 0; btns[i].classList.add('wrong'); }
+  fbEl.className = 'quiz-fb ' + (ok ? 'ok' : 'no');
+  fbEl.innerHTML = `<span class="verdict">${ok ? '答对了' : '答错了'}</span>【${current.t}＋${current.d}】名为「<b>${current.name}</b>」<span class="fd">${current.desc}</span><span class="det">${current.detail}</span>`;
+  btnNext.hidden = false;
+  updateStats();
+}
+
+btnNext.addEventListener('click', newQuestion);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { hideModal(); return; }
+  if (locked && e.key === 'Enter') { newQuestion(); return; }
+  if (!locked) {
+    const map = {'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3,'A':0,'B':1,'C':2,'D':3};
+    if (e.key in map) pick(map[e.key]);
+  }
+});
+
+/* ===== 八十一格总览（按地盘干分组，点击查看详情） ===== */
+const colsEl = document.getElementById('geju-cols');
+const cols = STEMS.map(d => ({ d, items: [] }));
+GEJU.forEach((g, i) => cols[STEMS.indexOf(g.d)].items.push({ g, i }));
+colsEl.innerHTML = cols.map(c =>
+  `<div class="gcol"><h4>地盘 ${c.d}</h4>${
+    c.items.map(({ g, i }) => `<button class="grow" data-i="${i}"><b>${g.t}</b>${g.name}</button>`).join('')
+  }</div>`).join('');
+colsEl.querySelectorAll('.grow').forEach(b =>
+  b.addEventListener('click', () => showGeju(GEJU[+b.dataset.i])));
+
+/* ===== 详情弹窗 ===== */
+const modal = document.getElementById('modal');
+function showGeju(g){
+  document.getElementById('modal-head').innerHTML =
+    `<span class="m-combo">【${g.t}＋${g.d}】</span><span class="m-name">${g.name}</span>`;
+  document.getElementById('modal-body').innerHTML =
+    `<p class="m-desc">${g.desc}</p><h5>详解</h5><p class="m-detail">${g.detail}</p>`;
+  modal.hidden = false;
+}
+function hideModal(){ modal.hidden = true; }
+document.getElementById('modal-close').addEventListener('click', hideModal);
+modal.addEventListener('click', e => { if (e.target === modal) hideModal(); });
+
+newQuestion();
+</script>
+</body>
+</html>

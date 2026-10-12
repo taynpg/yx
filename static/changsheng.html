@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>十二长生 · 天干寄生十二宫练习</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ===== 十二长生页专属样式 ===== */
+.quiz-q{display:flex;align-items:center;justify-content:center;gap:44px;margin:24px 0 6px;flex-wrap:wrap}
+.np-grid{display:grid;grid-template-columns:repeat(3,94px);grid-auto-rows:94px;gap:6px}
+.cell{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:8px;transition:.2s}
+.cell .p-num{position:absolute;top:5px;left:7px;font-size:10px;color:var(--muted);letter-spacing:.05em}
+.cell .p-name{font-family:var(--kai);font-size:20px;color:var(--ink-soft);line-height:1.1}
+.cell .p-branch{font-size:11px;color:var(--muted);letter-spacing:.12em}
+.cell.active{border-color:var(--cinnabar);background:rgba(224,101,80,.06);box-shadow:0 0 0 1.5px rgba(224,101,80,.55),0 0 18px rgba(224,101,80,.15)}
+.cell.active .p-name{color:var(--cinnabar)}
+.cell.active .p-branch{color:var(--ink-soft)}
+.cell .p-stem{display:none;font-family:var(--kai);font-size:42px;line-height:1;color:var(--gold)}
+.cell.active .p-stem{display:block}
+.cell.center{background:transparent;border-style:dashed}
+.cell.center .p-name{font-size:14px;color:var(--muted);letter-spacing:.15em}
+.cell.center .p-branch{font-size:10px;letter-spacing:.2em}
+.q-side{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:320px}
+.q-text{font-size:17px;line-height:2.2;color:var(--ink);text-align:center;letter-spacing:.08em}
+.q-text b{color:var(--cinnabar);font-family:var(--kai);font-size:21px}
+
+/* ===== 口诀速览 ===== */
+.ref-card{text-align:center;padding-bottom:24px}
+.ref-verse{font-family:var(--kai);font-size:24px;letter-spacing:.1em;color:var(--gold);margin:6px 0 16px}
+.ref-note{font-size:13.5px;color:var(--ink-soft);line-height:2.1;text-align:justify;margin:8px 0}
+.ref-note b{color:var(--cinnabar)}
+
+details.cs-all{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 24px}
+details.cs-all summary{cursor:pointer;padding:14px 0;font-family:var(--kai);font-size:18px;letter-spacing:.15em;color:var(--ink-soft);list-style:none;display:flex;align-items:center;gap:10px}
+details.cs-all summary::before{content:"◆";color:var(--gold);font-size:11px}
+details.cs-all[open] summary{border-bottom:1px dashed var(--line);margin-bottom:14px}
+.table-wrap{overflow-x:auto;padding-bottom:16px}
+.cs-table{border-collapse:collapse;width:100%;min-width:680px}
+.cs-table th,.cs-table td{border:1px solid var(--line);padding:7px 4px;font-size:13px;text-align:center;color:var(--ink-soft)}
+.cs-table th{color:var(--muted);font-weight:600;letter-spacing:.08em}
+.cs-table th:first-child,.cs-table td:first-child{font-family:var(--kai);font-size:16px;color:var(--ink);background:var(--paper)}
+.cs-table td.cs-long{color:var(--cinnabar);background:rgba(224,101,80,.1);font-weight:600}
+.cs-tip{padding-bottom:14px;font-size:12px;color:var(--muted);letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="seal">生</div>
+  <h1>十二长生</h1>
+  <div class="sub">天干寄生十二宫 · 旺衰之序</div>
+  <div class="divider">❖</div>
+  <nav>
+    <a href="index.html">首　页</a>
+    <a href="#">卦象知识</a>
+    <a href="qimen.html">奇门练习</a>
+    <a class="active" href="changsheng.html">长生练习</a>
+    <a href="#">占筮记录</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section>
+    <div class="sec-title"><h2>落宫断态问答</h2><span class="tag">随机练习</span></div>
+    <p class="sec-desc">十天干寄生于十二支宫，各有旺衰十二态：长生、沐浴、冠带、临官、帝旺、衰、病、死、墓、绝、胎、养。阳干顺布，阴干逆布。今随机置一天干于洛书八宫之一（中五宫无支可寄，甲尊遁而不居），请依落宫地支，断其处于何态。</p>
+
+    <div class="card quiz-card">
+      <div class="quiz-stats">第 <b id="q-num">1</b> 题 · 答对 <b id="q-right">0</b> / <span id="q-total">0</span> · 连对 <b id="q-streak">0</b></div>
+      <div class="quiz-q">
+        <div class="np-grid" id="np-grid"></div>
+        <div class="q-side">
+          <div class="q-text">天干「<b id="q-gan">甲</b>」落临<br><b id="q-palace">乾宫 · 西北</b><br>其处十二长生何状态？</div>
+        </div>
+      </div>
+      <div class="quiz-opts" id="opts"></div>
+      <div class="quiz-fb" id="fb"></div>
+      <div class="quiz-actions"><button id="btn-next" class="btn-primary" hidden>下一题（回车）</button></div>
+      <div class="quiz-tip">提示：按 1–4 或 A–D 作答，回车进入下一题</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>长生诀速览</h2><span class="tag">口诀 · 全表</span></div>
+    <div class="card ref-card">
+      <div class="ref-verse">甲亥乙午丙戊寅，庚巳辛子壬在申；丁己在酉癸卯寻。</div>
+      <p class="ref-note"><b>阳顺阴逆：</b>阳干长生顺行十二宫，阴干长生逆行十二宫。甲长生在亥、乙长生在午、丙戊长生在寅、丁己长生在酉、庚长生在巳、辛长生在子、壬长生在申、癸长生在卯。</p>
+      <p class="ref-note"><b>十二态释义：</b>长生犹人之初生，沐浴犹初生洗垢，冠带犹渐长整衣，临官犹壮而可仕（即禄位），帝旺犹壮盛之极，衰则盛极而衰，病、死、墓、绝由衰而尽，绝者气尽，胎者气聚成形，养者成形待生，周而复始。</p>
+      <p class="ref-note"><b>临官即禄：</b>甲禄在寅、乙禄在卯、丙戊禄在巳、丁己禄在午、庚禄在申、辛禄在酉、壬禄在亥、癸禄在子。</p>
+    </div>
+  </section>
+
+  <section>
+    <details class="cs-all" id="cs-all">
+      <summary>十干十二宫全表（点此展开查阅）</summary>
+      <div class="table-wrap"><table class="cs-table" id="cs-table"></table></div>
+      <div class="cs-tip">※ 朱红者为长生之位，即上诀之全貌；临官之列即十干禄位</div>
+    </details>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="m">生生之谓易。</div>
+  <div>易经研习 · 十天干十二长生练习</div>
+</footer>
+
+<script>
+/* ===== 数据 ===== */
+const STAGES = ['长生','沐浴','冠带','临官','帝旺','衰','病','死','墓','绝','胎','养'];
+const BRANCHES = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const GANS = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+/* 各干长生之位与顺逆：[长生支, 阳顺1/阴逆-1] */
+const CS = {'甲':['亥',1],'乙':['午',-1],'丙':['寅',1],'戊':['寅',1],'庚':['巳',1],'壬':['申',1],
+            '丁':['酉',-1],'己':['酉',-1],'辛':['子',-1],'癸':['卯',-1]};
+/* GAN_MAP[g][b] = 天干 g 在地支 b 处的状态 */
+const GAN_MAP = {};
+for(const g of GANS){
+  const [s,d] = CS[g], si = BRANCHES.indexOf(s);
+  GAN_MAP[g] = {};
+  for(const b of BRANCHES) GAN_MAP[g][b] = STAGES[(((BRANCHES.indexOf(b)-si)*d)%12+12)%12];
+}
+/* 洛书八宫（中五宫无支可寄） */
+const PALACES = [
+  {num:4,name:'巽',dir:'东南',branches:['辰','巳']},
+  {num:9,name:'离',dir:'南',  branches:['午']},
+  {num:2,name:'坤',dir:'西南',branches:['未','申']},
+  {num:3,name:'震',dir:'东',  branches:['卯']},
+  {num:7,name:'兑',dir:'西',  branches:['酉']},
+  {num:8,name:'艮',dir:'东北',branches:['丑','寅']},
+  {num:1,name:'坎',dir:'北',  branches:['子']},
+  {num:6,name:'乾',dir:'西北',branches:['戌','亥']}
+];
+const PMAP = {}; PALACES.forEach(p=>PMAP[p.num]=p);
+const LAYOUT = [4,9,2,3,5,7,8,1,6];   /* 九宫排布：上南下北 */
+const CN = {1:'一',2:'二',3:'三',4:'四',5:'五',6:'六',7:'七',8:'八',9:'九'};
+const VERSE = {'甲':'「甲亥」','乙':'「乙午」','丙':'「丙戊寅」','戊':'「丙戊寅」','庚':'「庚巳」',
+               '辛':'「辛子」','壬':'「壬在申」','丁':'「丁己在酉」','己':'「丁己在酉」','癸':'「癸卯寻」'};
+/* 合法答案池：所有（干,宫）组合之态（双支宫两态并答），去重 */
+const PAIR_POOL = (()=>{
+  const seen = new Set(), arr = [];
+  for(const g of GANS) for(const p of PALACES){
+    const a = p.branches.map(b=>GAN_MAP[g][b]).join(' · ');
+    if(!seen.has(a)){seen.add(a);arr.push(a);}
+  }
+  return arr;
+})();
+
+const $ = s=>document.querySelector(s);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ===== 静态九宫格 ===== */
+const gridEl = $('#np-grid');
+gridEl.innerHTML = LAYOUT.map(n=>{
+  if(n===5) return `<div class="cell center"><span class="p-name">中五宫</span><span class="p-branch">甲遁不居</span></div>`;
+  const p = PMAP[n];
+  return `<div class="cell" data-num="${n}" title="${CN[n]}宫${p.name} · ${p.dir}">`+
+         `<span class="p-num">${CN[n]}</span><span class="p-stem"></span>`+
+         `<span class="p-name">${p.name}</span><span class="p-branch">${p.branches.join('')}</span></div>`;
+}).join('');
+
+/* ===== 出题 ===== */
+let cur=null, qn=0, right=0, streak=0, answered=false;
+
+function newQuestion(){
+  const g = GANS[Math.floor(Math.random()*GANS.length)];
+  const p = PALACES[Math.floor(Math.random()*PALACES.length)];
+  cur = {g, p, answer:p.branches.map(b=>GAN_MAP[g][b]).join(' · ')};
+  qn++;
+  $('#q-num').textContent = qn;
+  $('#q-total').textContent = qn;
+  $('#q-gan').textContent = g;
+  $('#q-palace').textContent = `${CN[p.num]}宫${p.name} · ${p.dir}`;
+  /* 九宫高亮 */
+  gridEl.querySelectorAll('.cell').forEach(c=>c.classList.remove('active'));
+  const cell = gridEl.querySelector(`.cell[data-num="${p.num}"]`);
+  cell.classList.add('active');
+  cell.querySelector('.p-stem').textContent = g;
+  /* 选项 */
+  const pool = shuffle(PAIR_POOL.filter(x=>x!==cur.answer)).slice(0,3);
+  cur.items = shuffle([cur.answer,...pool]);
+  $('#opts').innerHTML = cur.items.map((o,i)=>
+    `<button class="opt" data-i="${i}"><span class="kbd">${'ABCD'[i]}</span>${o}</button>`).join('');
+  $('#fb').className = 'quiz-fb';
+  $('#fb').innerHTML = '';
+  $('#btn-next').hidden = true;
+  answered = false;
+}
+
+function pick(i){
+  if(answered || !cur) return;
+  answered = true;
+  const {g,p,answer,items} = cur;
+  const ok = items[i]===answer;
+  if(ok){right++;streak++;}else{streak=0;}
+  $('#q-right').textContent = right;
+  $('#q-streak').textContent = streak;
+  document.querySelectorAll('#opts .opt').forEach((b,idx)=>{
+    b.disabled = true;
+    if(items[idx]===answer) b.classList.add('correct');
+    else if(idx===i) b.classList.add('wrong');
+  });
+  const yang = CS[g][1]===1;
+  const chain = BRANCHES.map(b=>{
+    const s = b+GAN_MAP[g][b];
+    return p.branches.includes(b) ? `<b>${s}</b>` : s;
+  }).join(' · ');
+  $('#fb').className = 'quiz-fb '+(ok?'ok':'no');
+  $('#fb').innerHTML =
+    `<span class="verdict">${ok?'✓ 正确':'✗ 错误'}</span>`+
+    `歌诀 ${VERSE[g]}——${g}长生在<b>${CS[g][0]}</b>，${g}为${yang?'阳':'阴'}干，${yang?'顺':'逆'}行十二宫，`+
+    `落${CN[p.num]}宫${p.name}（${p.branches.join('')}）${ok?'正是':'当为'} <b>${answer}</b>。`+
+    `<span class="det">${g}干十二宫：${chain}</span>`;
+  $('#btn-next').hidden = false;
+}
+
+$('#opts').addEventListener('click',e=>{
+  const b = e.target.closest('.opt');
+  if(b) pick(+b.dataset.i);
+});
+$('#btn-next').addEventListener('click',newQuestion);
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter' && !$('#btn-next').hidden){newQuestion();return;}
+  if(answered) return;
+  const map = {'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3};
+  const k = e.key.toLowerCase();
+  if(k in map) pick(map[k]);
+});
+
+/* ===== 十干十二宫全表 ===== */
+$('#cs-table').innerHTML =
+  `<tr><th>干＼支</th>${BRANCHES.map(b=>`<th>${b}</th>`).join('')}</tr>`+
+  GANS.map(g=>`<tr><td>${g}</td>`+
+    BRANCHES.map(b=>`<td class="${GAN_MAP[g][b]==='长生'?'cs-long':''}">${GAN_MAP[g][b]}</td>`).join('')+
+    `</tr>`).join('');
+
+newQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+/* ===== 共享主题：玄青墨蓝（暗色） ===== */
+:root{
+  --paper:#0e1420;
+  --card:#151d2c;
+  --ink:#dce4f0;
+  --ink-soft:#a8b4c8;
+  --muted:#6f7d94;
+  --cinnabar:#e06550;
+  --cinnabar-deep:#a03a2a;
+  --gold:#d4b06a;
+  --line:#2a3648;
+  --kai:"KaiTi","STKaiti","楷体","Noto Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:"Noto Serif SC","Source Han Serif SC","SimSun","STSong",serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 500px at 50% -100px, rgba(212,176,106,.07), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(220,228,240,.018) 0 1px, transparent 1px 5px),
+    var(--paper);
+  min-height:100vh;
+}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+
+/* ===== 头部 ===== */
+header{text-align:center;padding:52px 20px 10px}
+.seal{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:46px;height:46px;background:var(--cinnabar-deep);color:#f7f1e4;
+  font-family:var(--kai);font-size:27px;border-radius:8px;
+  box-shadow:0 2px 6px rgba(138,46,33,.35);margin-bottom:14px;
+}
+h1{font-family:var(--kai);font-size:42px;font-weight:700;letter-spacing:.28em;text-indent:.28em}
+.sub{margin-top:10px;color:var(--muted);font-size:15px;letter-spacing:.35em;text-indent:.35em}
+.divider{display:flex;align-items:center;gap:14px;justify-content:center;margin:26px auto 0;max-width:520px;color:var(--gold)}
+.divider::before,.divider::after{content:"";flex:1;height:1px}
+.divider::before{background:linear-gradient(90deg,transparent,var(--gold))}
+.divider::after{background:linear-gradient(90deg,var(--gold),transparent)}
+nav{margin-top:22px;display:flex;justify-content:center;gap:34px;flex-wrap:wrap}
+nav a{color:var(--ink-soft);text-decoration:none;font-size:16px;letter-spacing:.15em;padding:6px 2px;border-bottom:2px solid transparent;transition:.2s}
+nav a:hover,nav a.active{color:var(--cinnabar);border-bottom-color:var(--cinnabar)}
+
+/* ===== 区块与卡片 ===== */
+section{margin:44px 0}
+.sec-title{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-title h2{font-family:var(--kai);font-size:26px;letter-spacing:.2em}
+.sec-title .tag{font-size:12px;color:var(--cinnabar);border:1px solid var(--cinnabar);padding:2px 8px;border-radius:3px;letter-spacing:.2em}
+.sec-desc{color:var(--muted);font-size:14px;margin-bottom:22px;line-height:1.9}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 26px 20px;box-shadow:0 3px 14px rgba(0,0,0,.35)}
+.card-head{display:flex;align-items:baseline;justify-content:center;gap:12px;margin-bottom:4px}
+.card-head h3{font-family:var(--kai);font-size:23px;letter-spacing:.12em}
+.card-head .who{color:var(--muted);font-size:13px;letter-spacing:.15em}
+.card .hint{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--muted);text-align:center;min-height:1.8em}
+.card .hint b{color:var(--cinnabar)}
+
+footer{margin-top:56px;padding:26px 20px 40px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line);letter-spacing:.1em;line-height:2}
+footer .m{font-family:var(--kai);color:var(--ink-soft);font-size:14.5px}
+
+/* ===== 练习页通用 ===== */
+.quiz-card{max-width:780px;margin:0 auto;text-align:center;padding:32px 30px 26px}
+.quiz-stats{color:var(--muted);font-size:13.5px;letter-spacing:.08em}
+.quiz-stats b{color:var(--cinnabar);font-weight:600}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 4px}
+@media (max-width:640px){.quiz-opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:16.5px;font-family:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;cursor:pointer;transition:.15s;text-align:left}
+.opt:hover:not(:disabled){border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.opt:disabled{cursor:default;opacity:.75}
+.opt .kbd{flex:0 0 22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:5px;background:var(--paper)}
+.opt.correct{border-color:#5f9a6e;background:rgba(95,154,110,.12);opacity:1}
+.opt.correct .kbd{color:#8cc79b;border-color:#5f9a6e}
+.opt.wrong{border-color:var(--cinnabar);background:rgba(224,101,80,.12);opacity:1}
+.opt.wrong .kbd{color:var(--cinnabar);border-color:var(--cinnabar)}
+.quiz-fb{margin-top:16px;min-height:1.6em;font-size:14.5px;line-height:2}
+.quiz-fb .verdict{font-family:var(--kai);font-size:19px;margin-right:10px;letter-spacing:.15em}
+.quiz-fb.ok .verdict{color:#8cc79b}
+.quiz-fb.no .verdict{color:var(--cinnabar)}
+.quiz-fb b{color:var(--cinnabar)}
+.quiz-fb .fd{display:block;color:var(--ink-soft)}
+.quiz-fb .det{display:block;color:var(--muted);font-size:13px;line-height:1.95;margin-top:4px;text-align:justify}
+.quiz-actions{margin-top:14px}
+.btn-primary{font-family:inherit;font-size:15px;letter-spacing:.2em;padding:9px 30px;color:#f7f1e4;background:var(--cinnabar-deep);border:none;border-radius:8px;cursor:pointer;transition:.15s}
+.btn-primary:hover{background:var(--cinnabar)}
+.quiz-tip{margin-top:14px;font-size:12px;color:var(--muted);letter-spacing:.08em}
