@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>卦象知识 · 卦爻体例与天干总览</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ===== 基础知识页专属样式 ===== */
+.def-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.def-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.def-card h4{font-family:var(--kai);font-size:17px;color:var(--gold);letter-spacing:.15em;margin-bottom:8px}
+.def-card h4 i{font-style:normal;font-size:11px;color:var(--muted);letter-spacing:.08em;margin-left:8px}
+.def-card p{font-size:13.5px;color:var(--ink-soft);line-height:2.05}
+.def-card p b{color:var(--cinnabar);font-weight:600}
+
+.body-note{font-size:13px;color:var(--muted);line-height:1.9;margin:2px 0 16px;text-align:justify}
+.body-note b{color:var(--cinnabar)}
+
+/* 十二辟卦 */
+.bi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+@media(max-width:760px){.bi-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){.bi-grid{grid-template-columns:repeat(3,1fr)}}
+.bi-cell{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 6px 11px;text-align:center}
+.bi-cell b{display:block;font-family:var(--kai);font-size:21px;color:var(--ink)}
+.bi-cell .m{display:block;font-size:12px;color:var(--cinnabar);margin-top:5px;letter-spacing:.1em}
+.bi-cell .y{display:block;font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.08em}
+
+/* 序卦歌 */
+.song-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.song-grid{grid-template-columns:1fr}}
+.song-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px 16px;text-align:center}
+.song-box h4{font-family:var(--kai);font-size:16px;color:var(--gold);letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.song{font-family:var(--kai);font-size:19px;line-height:2.15;letter-spacing:.18em;color:var(--ink)}
+.song-note{margin-top:10px;font-size:12.5px;color:var(--muted);letter-spacing:.06em}
+
+/* 断辞术语 */
+.term-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.term{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 15px}
+.term b{display:block;font-family:var(--kai);font-size:17px;color:var(--cinnabar);margin-bottom:4px;letter-spacing:.1em}
+.term span{font-size:12.5px;color:var(--ink-soft);line-height:1.9}
+
+/* 天干表 */
+.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px}
+.gan-table{border-collapse:collapse;width:100%;min-width:580px}
+.gan-table th,.gan-table td{border:1px solid var(--line);padding:9px 6px;font-size:13.5px;text-align:center;color:var(--ink-soft)}
+.gan-table th{color:var(--muted);font-weight:600;letter-spacing:.08em}
+.gan-table td:first-child{font-family:var(--kai);font-size:18px;color:var(--ink)}
+.gan-table td.g-y{color:var(--gold)}
+.gan-table td.g-i{color:var(--cinnabar)}
+.table-note{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:2}
+.table-note b{color:var(--cinnabar)}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="seal">识</div>
+  <h1>卦象知识</h1>
+  <div class="sub">卦爻体例 · 天干总览</div>
+  <div class="divider">❖</div>
+  <nav>
+    <a href="index.html">首　页</a>
+    <a class="active" href="basics.html">卦象知识</a>
+    <a href="qimen.html">奇门练习</a>
+    <a href="changsheng.html">长生练习</a>
+    <a href="gua64.html">六十四卦</a>
+    <a href="#">占筮记录</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <div class="sec-title"><h2>卦爻基本</h2><span class="tag">概念</span></div>
+    <div class="def-grid">
+      <div class="def-card"><h4>爻</h4><p>阴阳的代码。一画为爻，实画为阳、断画为阴，是最基本的符号。</p></div>
+      <div class="def-card"><h4>卦</h4><p>爻的组合。三爻成一卦之体，六爻成一卦之全。</p></div>
+      <div class="def-card"><h4>八经卦<i>小成卦</i></h4><p>伏羲八卦，即<b>先天八卦</b>：乾、坤、震、巽、坎、离、艮、兑。</p></div>
+      <div class="def-card"><h4>文王卦<i>大成卦</i></h4><p>又称别卦，即<b>后天八卦</b>体系：两经卦相重，推演为六十四卦。</p></div>
+      <div class="def-card"><h4>阴阳卦</h4><p>以卦之笔画分：笔画为<b>奇数</b>者为阳卦，笔画为<b>偶数</b>者为阴卦。</p></div>
+      <div class="def-card"><h4>卦位</h4><p>上面的卦为<b>上卦</b>，又称外卦，其位为「往」；下面的卦为<b>下卦</b>，又称内卦，其位为「来」。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>爻位体例</h2><span class="tag">读卦之法</span></div>
+    <p class="body-note"><b>读卦从上往下</b>（如「水雷屯」，上坎下震）；<b>看卦从下往上</b>，以初爻为始。<b>爻像</b>：指这一爻是阴爻还是阳爻。</p>
+    <div class="def-grid">
+      <div class="def-card"><h4>中</h4><p>中是中心、中间。六爻之中，<b>二爻与五爻</b>称为中位。</p></div>
+      <div class="def-card"><h4>正</h4><p>阴爻对阴位，阳爻对阳位，谓之得正（初、三、五为阳位，二、四、上为阴位）。</p></div>
+      <div class="def-card"><h4>中正</h4><p>凡二爻为阴爻、五爻为阳爻，谓之<b>中正</b>——既得中，又得正。</p></div>
+      <div class="def-card"><h4>应</h4><p>对应的意思。初与四应、二与五应、三与上应，两两遥相呼应。</p></div>
+      <div class="def-card"><h4>比</h4><p>比较的意思，<b>两个相邻之爻</b>为比。</p></div>
+      <div class="def-card"><h4>承</h4><p>继承的意思，就<b>下爻对上爻</b>而言，在下者承接在上者。</p></div>
+      <div class="def-card"><h4>乘</h4><p>是<b>下对上</b>来说的，在下者乘凌于在上者之上。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>卦变四法</h2><span class="tag">错综复杂</span></div>
+    <div class="def-grid">
+      <div class="def-card"><h4>错卦<i>对卦</i></h4><p>相对的意思：两卦<b>阴阳爻全然相对</b>，即每一爻互变。</p></div>
+      <div class="def-card"><h4>综卦<i>宾主法</i></h4><p>将本卦<b>上下颠倒</b>、反过来看。本卦为我，所变综卦为宾、为彼。</p></div>
+      <div class="def-card"><h4>复卦<i>交互取爻</i></h4><p>三、四两爻在交互中重复使用——只看<b>二、三、四、五</b>这中间四爻：以二、三、四为下卦，三、四、五为上卦。</p></div>
+      <div class="def-card"><h4>杂卦<i>交互卦</i></h4><p>上卦与下卦的一两爻相联为「<b>交</b>」，下卦与上卦的一两爻相联为「<b>互</b>」；上下交互、彼此相杂而成新卦，故名杂卦。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>十二辟卦</h2><span class="tag">消息之卦</span></div>
+    <p class="body-note">十二辟卦又称<b>十二消息卦</b>：阳长为「息」，阴长为「消」，以卦配月、周而复始。</p>
+    <div class="bi-grid">
+      <div class="bi-cell"><b>复</b><span class="m">十一月 · 子</span><span class="y">一阳息</span></div>
+      <div class="bi-cell"><b>临</b><span class="m">十二月 · 丑</span><span class="y">二阳息</span></div>
+      <div class="bi-cell"><b>泰</b><span class="m">正月 · 寅</span><span class="y">三阳息</span></div>
+      <div class="bi-cell"><b>大壮</b><span class="m">二月 · 卯</span><span class="y">四阳息</span></div>
+      <div class="bi-cell"><b>夬</b><span class="m">三月 · 辰</span><span class="y">五阳息</span></div>
+      <div class="bi-cell"><b>乾</b><span class="m">四月 · 巳</span><span class="y">六阳</span></div>
+      <div class="bi-cell"><b>姤</b><span class="m">五月 · 午</span><span class="y">一阴消</span></div>
+      <div class="bi-cell"><b>遁</b><span class="m">六月 · 未</span><span class="y">二阴消</span></div>
+      <div class="bi-cell"><b>否</b><span class="m">七月 · 申</span><span class="y">三阴消</span></div>
+      <div class="bi-cell"><b>观</b><span class="m">八月 · 酉</span><span class="y">四阴消</span></div>
+      <div class="bi-cell"><b>剥</b><span class="m">九月 · 戌</span><span class="y">五阴消</span></div>
+      <div class="bi-cell"><b>坤</b><span class="m">十月 · 亥</span><span class="y">六阴</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>上下经序卦歌</h2><span class="tag">卦序</span></div>
+    <div class="song-grid">
+      <div class="song-box">
+        <h4>上　经</h4>
+        <div class="song">乾坤屯蒙需讼师<br>比小畜兮履泰否<br>同人大有谦豫随<br>蛊临观兮噬嗑贲<br>剥复无妄大畜颐<br>大过坎离三十备</div>
+        <div class="song-note">自乾至离，凡三十卦</div>
+      </div>
+      <div class="song-box">
+        <h4>下　经</h4>
+        <div class="song">咸恒遁兮及大壮<br>晋与明夷家人睽<br>蹇解损益夬姤萃<br>升困井革鼎震继<br>艮渐归妹丰旅巽<br>兑涣节兮中孚至<br>小过既济兼未济<br>是为下经三十四</div>
+        <div class="song-note">自咸至未济，凡三十四卦</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>断辞术语</h2><span class="tag">卦爻辞常用字</span></div>
+    <div class="term-grid">
+      <div class="term"><b>元</b><span>大也，始也。</span></div>
+      <div class="term"><b>亨</b><span>通也，通达。</span></div>
+      <div class="term"><b>利</b><span>宜也，和顺有利。</span></div>
+      <div class="term"><b>贞</b><span>正也，固守正道；亦占问之义。</span></div>
+      <div class="term"><b>吉</b><span>福善也。</span></div>
+      <div class="term"><b>凶</b><span>祸殃也。</span></div>
+      <div class="term"><b>悔</b><span>困厄而知悔，悔则趋吉。</span></div>
+      <div class="term"><b>吝</b><span>羞吝文饰，为趋凶之渐。</span></div>
+      <div class="term"><b>咎</b><span>过失、灾咎也。</span></div>
+      <div class="term"><b>厉</b><span>危厉，危险也。</span></div>
+      <div class="term"><b>惕</b><span>忧惧，警惕也。</span></div>
+      <div class="term"><b>孚</b><span>诚信也。</span></div>
+      <div class="term"><b>勿用</b><span>不可施用，不宜有所作为。</span></div>
+      <div class="term"><b>发若</b><span>奋发之貌。</span></div>
+      <div class="term"><b>挛如</b><span>拘系相牵之貌。</span></div>
+      <div class="term"><b>威如</b><span>威严之貌。</span></div>
+    </div>
+    <p class="body-note" style="margin-top:12px">注：「若」「如」皆为语助之辞。</p>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>天干总览</h2><span class="tag">甲乙丙丁</span></div>
+    <p class="body-note">天干十位：<b>甲、乙、丙、丁、戊、己、庚、辛、壬、癸</b>。五行各一阴一阳，故有十位。</p>
+    <div class="table-wrap">
+      <table class="gan-table">
+        <tr><th>天干</th><th>阴阳</th><th>五行</th><th>方位</th><th>五季</th><th>配身体</th><th>配脏腑</th></tr>
+        <tr><td>甲</td><td class="g-y">阳</td><td>木</td><td>东方</td><td>春</td><td>头</td><td>胆</td></tr>
+        <tr><td>乙</td><td class="g-i">阴</td><td>木</td><td>东方</td><td>春</td><td>肩</td><td>肝</td></tr>
+        <tr><td>丙</td><td class="g-y">阳</td><td>火</td><td>南方</td><td>夏</td><td>额</td><td>小肠</td></tr>
+        <tr><td>丁</td><td class="g-i">阴</td><td>火</td><td>南方</td><td>夏</td><td>齿舌</td><td>心</td></tr>
+        <tr><td>戊</td><td class="g-y">阳</td><td>土</td><td>中央</td><td>长夏</td><td>鼻面</td><td>胃</td></tr>
+        <tr><td>己</td><td class="g-i">阴</td><td>土</td><td>中央</td><td>长夏</td><td>鼻面</td><td>脾</td></tr>
+        <tr><td>庚</td><td class="g-y">阳</td><td>金</td><td>西方</td><td>秋</td><td>筋</td><td>大肠</td></tr>
+        <tr><td>辛</td><td class="g-i">阴</td><td>金</td><td>西方</td><td>秋</td><td>胸</td><td>肺</td></tr>
+        <tr><td>壬</td><td class="g-y">阳</td><td>水</td><td>北方</td><td>冬</td><td>胫</td><td>膀胱</td></tr>
+        <tr><td>癸</td><td class="g-i">阴</td><td>水</td><td>北方</td><td>冬</td><td>足</td><td>肾</td></tr>
+      </table>
+    </div>
+    <p class="table-note">※ 单数位（甲丙戊庚壬）为<b>腑</b>，双数位（乙丁己辛癸）为<b>脏</b>。</p>
+    <div class="def-grid" style="margin-top:14px">
+      <div class="def-card"><h4>天干化合</h4><p>甲己合化<b>土</b>，乙庚合化<b>金</b>，丙辛合化<b>水</b>，丁壬合化<b>木</b>，戊癸合化<b>火</b>。</p></div>
+      <div class="def-card"><h4>天干相冲</h4><p>甲与<b>庚</b>冲，乙与<b>辛</b>冲，丙与<b>壬</b>冲，丁与<b>癸</b>冲；戊与己同属土，合而不冲。</p></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div class="m">易有太极，是生两仪。</div>
+  <div>易经研习 · 卦象基础知识</div>
+</footer>
+
+</body>
+</html>
