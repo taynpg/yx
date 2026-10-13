@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>六十四卦 · 卦象卦名对应练习</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ===== 六十四卦页专属样式 ===== */
+.mode-sw{display:flex;justify-content:center;gap:10px;margin:2px 0}
+.mode-btn{font-family:var(--kai);font-size:14px;letter-spacing:.15em;text-indent:.15em;padding:7px 20px;background:var(--paper);color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;cursor:pointer;transition:.15s}
+.mode-btn:hover{border-color:var(--gold);color:var(--gold)}
+.mode-btn.active{border-color:var(--cinnabar);color:var(--cinnabar);background:rgba(224,101,80,.08)}
+
+.quiz-q{display:flex;flex-direction:column;align-items:center;gap:12px;margin:24px 0 6px}
+.q-suffix{color:var(--ink-soft);font-size:15px;letter-spacing:.2em}
+/* 卦画 */
+.hex{display:inline-flex;flex-direction:column;gap:7px;padding:10px 14px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.yao{width:84px;height:10px;background:var(--ink);border-radius:2px}
+.yao.yin{display:flex;justify-content:space-between;background:none}
+.yao.yin i{width:37px;height:10px;background:var(--ink);border-radius:2px}
+.hex.hx-mini{gap:3px;padding:6px 9px;border-radius:6px}
+.hex.hx-mini .yao{width:40px;height:5px}
+.hex.hx-mini .yao.yin i{width:17px;height:5px}
+.opt .hex{background:transparent;border:none;padding:0}
+.opt-fig{justify-content:center;padding:10px 16px}
+/* 看名选图之题面 */
+.q-name{font-family:var(--kai);font-size:58px;line-height:1.15}
+.q-alias{font-size:13px;color:var(--muted);letter-spacing:.3em;text-indent:.3em}
+
+/* ===== 总览 ===== */
+details.hx-all{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 24px}
+details.hx-all summary{cursor:pointer;padding:14px 0;font-family:var(--kai);font-size:18px;letter-spacing:.15em;color:var(--ink-soft);list-style:none;display:flex;align-items:center;gap:10px}
+details.hx-all summary::before{content:"◆";color:var(--gold);font-size:11px}
+details.hx-all[open] summary{border-bottom:1px dashed var(--line);margin-bottom:14px}
+.hx-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;padding-bottom:18px}
+@media(max-width:900px){.hx-grid{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:640px){.hx-grid{grid-template-columns:repeat(4,1fr)}}
+.hx-cell{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 4px 10px;background:var(--paper);border:1px solid var(--line);border-radius:10px;cursor:pointer;font-family:inherit;transition:.15s}
+.hx-cell:hover{border-color:var(--gold);transform:translateY(-2px)}
+.hx-cell span{font-size:13px;color:var(--ink-soft);letter-spacing:.1em}
+.hx-tip{padding-bottom:14px;font-size:12px;color:var(--muted);letter-spacing:.06em}
+
+/* ===== 详情弹窗 ===== */
+.modal-mask{position:fixed;inset:0;background:rgba(4,8,14,.65);display:flex;align-items:center;justify-content:center;padding:24px;z-index:50}
+.modal-mask[hidden]{display:none}
+.modal-card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:520px;width:100%;max-height:82vh;overflow:auto;padding:30px 34px 26px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.modal-close{position:absolute;top:12px;right:14px;width:30px;height:30px;background:none;border:none;font-size:17px;color:var(--muted);cursor:pointer;border-radius:6px;transition:.15s}
+.modal-close:hover{color:var(--cinnabar);background:rgba(224,101,80,.08)}
+.modal-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.m-combo{font-family:var(--kai);font-size:15px;color:var(--ink-soft)}
+.m-name{font-family:var(--kai);font-size:27px;color:var(--cinnabar);letter-spacing:.08em}
+.modal-body{margin-top:14px;border-top:1px dashed var(--line);padding-top:18px;text-align:center}
+.m-info{margin-top:14px;font-size:14.5px;color:var(--ink-soft);letter-spacing:.1em}
+.m-info b{color:var(--cinnabar)}
+.m-detail{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--muted);line-height:2;text-align:justify}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="seal">卦</div>
+  <h1>六十四卦</h1>
+  <div class="sub">卦象卦名 · 对应练习</div>
+  <div class="divider">❖</div>
+  <nav>
+    <a href="index.html">首　页</a>
+    <a href="#">卦象知识</a>
+    <a href="qimen.html">奇门练习</a>
+    <a href="changsheng.html">长生练习</a>
+    <a class="active" href="gua64.html">六十四卦</a>
+    <a href="#">卦爻练习</a>
+    <a href="#">占筮记录</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section>
+    <div class="sec-title"><h2>卦象卦名问答</h2><span class="tag">随机练习</span></div>
+    <p class="sec-desc">六十四卦由八卦两两相重而成：上三爻为上卦（外卦），下三爻为下卦（内卦），刚柔交错、象意各异。随机出一卦——或观其象而选其名，或观其名而辨其象。</p>
+
+    <div class="card quiz-card">
+      <div class="quiz-stats">第 <b id="q-num">1</b> 题 · 答对 <b id="q-right">0</b> / <span id="q-total">0</span> · 连对 <b id="q-streak">0</b></div>
+      <div class="mode-sw">
+        <button class="mode-btn active" data-mode="toname">看图选名</button>
+        <button class="mode-btn" data-mode="toimg">看名选图</button>
+      </div>
+      <div class="quiz-q" id="q-fig"></div>
+      <div class="q-suffix" id="q-suffix">此卦之名为？</div>
+      <div class="quiz-opts" id="opts"></div>
+      <div class="quiz-fb" id="fb"></div>
+      <div class="quiz-actions"><button id="btn-next" class="btn-primary" hidden>下一题（回车）</button></div>
+      <div class="quiz-tip">提示：按 1–4 或 A–D 作答，回车进入下一题</div>
+    </div>
+  </section>
+
+  <section>
+    <details class="hx-all" id="hx-all">
+      <summary>六十四卦总览（点此展开查阅）</summary>
+      <div class="hx-grid" id="hx-grid"></div>
+      <div class="hx-tip">※ 点击任一卦，可查看其上下卦之组成与卦义详解</div>
+    </details>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="m">刚柔相推，变在其中矣。</div>
+  <div>易经研习 · 六十四卦卦象卦名练习</div>
+</footer>
+
+<!-- 卦象详情弹窗 -->
+<div class="modal-mask" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modal-close" title="关闭">✕</button>
+    <div class="modal-head" id="modal-head"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ===== 数据 ===== */
+/* 八卦：[象, 自下而上三爻(1阳0阴)] */
+const TRIG = {
+  '乾':['天',[1,1,1]], '兑':['泽',[1,1,0]], '离':['火',[1,0,1]], '震':['雷',[1,0,0]],
+  '巽':['风',[0,1,1]], '坎':['水',[0,1,0]], '艮':['山',[0,0,1]], '坤':['地',[0,0,0]]
+};
+/* 六十四卦（文王序）：[序号, 卦名, 别名, 上卦, 下卦] */
+const HX = [
+  [1,'乾','乾为天','乾','乾'],   [2,'坤','坤为地','坤','坤'],   [3,'屯','水雷屯','坎','震'],   [4,'蒙','山水蒙','艮','坎'],
+  [5,'需','水天需','坎','乾'],   [6,'讼','天水讼','乾','坎'],   [7,'师','地水师','坤','坎'],   [8,'比','水地比','坎','坤'],
+  [9,'小畜','风天小畜','巽','乾'],[10,'履','天泽履','乾','兑'],  [11,'泰','地天泰','坤','乾'],  [12,'否','天地否','乾','坤'],
+  [13,'同人','天火同人','乾','离'],[14,'大有','火天大有','离','乾'],[15,'谦','地山谦','坤','艮'],[16,'豫','雷地豫','震','坤'],
+  [17,'随','泽雷随','兑','震'],  [18,'蛊','山风蛊','艮','巽'],  [19,'临','地泽临','坤','兑'],  [20,'观','风地观','巽','坤'],
+  [21,'噬嗑','火雷噬嗑','离','震'],[22,'贲','山火贲','艮','离'], [23,'剥','山地剥','艮','坤'],  [24,'复','地雷复','坤','震'],
+  [25,'无妄','天雷无妄','乾','震'],[26,'大畜','山天大畜','艮','乾'],[27,'颐','山雷颐','艮','震'],[28,'大过','泽风大过','兑','巽'],
+  [29,'坎','坎为水','坎','坎'],  [30,'离','离为火','离','离'],  [31,'咸','泽山咸','兑','艮'],  [32,'恒','雷风恒','震','巽'],
+  [33,'遁','天山遁','乾','艮'],  [34,'大壮','雷天大壮','震','乾'],[35,'晋','火地晋','离','坤'], [36,'明夷','地火明夷','坤','离'],
+  [37,'家人','风火家人','巽','离'],[38,'睽','火泽睽','离','兑'], [39,'蹇','水山蹇','坎','艮'],  [40,'解','雷水解','震','坎'],
+  [41,'损','山泽损','艮','兑'],  [42,'益','风雷益','巽','震'],  [43,'夬','泽天夬','兑','乾'],  [44,'姤','天风姤','乾','巽'],
+  [45,'萃','泽地萃','兑','坤'],  [46,'升','地风升','坤','巽'],  [47,'困','泽水困','兑','坎'],  [48,'井','水风井','坎','巽'],
+  [49,'革','泽火革','兑','离'],  [50,'鼎','火风鼎','离','巽'],  [51,'震','震为雷','震','震'],  [52,'艮','艮为山','艮','艮'],
+  [53,'渐','风山渐','巽','艮'],  [54,'归妹','雷泽归妹','震','兑'],[55,'丰','雷火丰','震','离'], [56,'旅','火山旅','离','艮'],
+  [57,'巽','巽为风','巽','巽'],  [58,'兑','兑为泽','兑','兑'],  [59,'涣','风水涣','巽','坎'],  [60,'节','水泽节','坎','兑'],
+  [61,'中孚','风泽中孚','巽','兑'],[62,'小过','雷山小过','震','艮'],[63,'既济','水火既济','坎','离'],[64,'未济','火水未济','离','坎']
+];
+
+/* 各卦卦辞与卦义详解（键为卦序） */
+const DETAIL = {
+  1:'「乾：元，亨，利，贞。」六爻纯阳，天行刚健，创始万物。君子法天之健，自强不息，进取则大通顺利。',
+  2:'「坤：元亨，利牝马之贞。」六爻纯阴，柔顺厚德，载物无疆。宜守正随从、后发承事，不宜为先。',
+  3:'「屯：元亨利贞，勿用有攸往。」云雷交作，阴阳始交而难生。草木初出盘桓之象，创始维艰，宜建侯守正、蓄势待时。',
+  4:'「蒙：亨。匪我求童蒙，童蒙求我。」山下出泉，蒙昧未明。主启蒙开化之事，诚心求教则亨通。',
+  5:'「需：有孚，光亨，贞吉。」云上于天，待时而降。主等待时机，持诚守正则吉，不可躁进。',
+  6:'「讼：有孚窒，惕中吉，终凶。」天与水违行，争讼之象。争端戒惧得中则吉，穷争不休终凶，贵和息事。',
+  7:'「师：贞，丈人吉，无咎。」地中有水，容民畜众。主兴师动众、率众行事，师出以正、老成持重则吉。',
+  8:'「比：吉。原筮元永贞，无咎。」水行地上，亲密相比。主亲附辅佐、择善而从，相互依凭则吉。',
+  9:'「小畜：亨。密云不雨，自我西郊。」风行天上，以小畜大。所蓄未厚、时机未至，宜蓄养实力。',
+  10:'「履虎尾，不咥人，亨。」上天下泽，如履虎尾而不见咥。以柔履刚、循礼慎行，虽临危境而无伤。',
+  11:'「泰：小往大来，吉亨。」天地交而万物通，上下交而其志同。通达安泰之象，盛时尤宜持盈守成。',
+  12:'「否：否之匪人，不利君子贞，大往小来。」天地不交，万物不通。闭塞之世，宜退处静守，避害远祸。',
+  13:'「同人：同人于野，亨，利涉大川。」天火同明，与人和同。志同道合、开诚布公，可共济大业。',
+  14:'「大有：元亨。」火在天上，普照万物。富有盛大之象，所获丰隆，万事亨通。',
+  15:'「谦：亨，君子有终。」地中有山，内蕴高而外自卑。谦退自持，损有余补不足，君子终得善果。',
+  16:'「豫：利建侯行师。」雷出地奋，和乐豫悦。顺而动则喜，安乐之余，防逸乐丧志。',
+  17:'「随：元亨利贞，无咎。」泽中有雷，随时安息。主顺从随时、择善而从，随而不失其正则无咎。',
+  18:'「蛊：元亨，利涉大川。」山下有风，物久腐败而生虫。积弊之象，须整治革新，除旧建新方利。',
+  19:'「临：元亨利贞。」泽上有地，居高临下。阳道渐长，主督导统御，以宽厚临众则吉。',
+  20:'「观：盥而不荐，有孚颙若。」风行地上，无所不周。主观察省视、垂范教化，观人亦观己。',
+  21:'「噬嗑：亨，利用狱。」雷电交合，明威并著。如口中有物，咬而合之，主排除障碍、明断狱讼。',
+  22:'「贲：亨，小利有攸往。」山下有火，文饰光明。主修饰装点、礼文之饰，文质相称、以质为本则亨。',
+  23:'「剥：不利有攸往。」山附于地，剥落之象。阴盛剥阳、衰败将尽，宜静守待变，不宜进取。',
+  24:'「复：亨。出入无疾，朋来无咎。」雷在地中，一阳来复。生机初萌、回复更始之象，渐有转机。',
+  25:'「无妄：元亨利贞。」天下雷行，物与无妄。顺乎自然、不妄为则大通，妄行则有眚灾。',
+  26:'「大畜：利贞。不家食吉，利涉大川。」天在山中，以大畜养。厚积薄发、德能兼备，宜出仕进取、共举大业。',
+  27:'「颐：贞吉。观颐，自求口实。」山下有雷，上止下动，颐养之象。主养生自养、慎言节食，养之以正则吉。',
+  28:'「大过：栋桡，利有攸往，亨。」泽灭木，阳刚过极。栋梁下弯，非常之时可行非常之事，然须防过极失衡。',
+  29:'「习坎：有孚，维心亨，行有尚。」水洊而至，重险相仍。履险之道，唯以诚信维系、心志亨通，方可涉险有功。',
+  30:'「离：利贞，亨。畜牝牛吉。」明两作离，光明相继。附丽之象，以柔顺守正依附于正道则利而亨。',
+  31:'「咸：亨，利贞，取女吉。」山上有泽，二气交感。天地感而万物化生，主两情相感、相应相与，婚娶之吉象。',
+  32:'「恒：亨，无咎，利贞。」雷风相与，长久之道。主持之以恒、守常不变，恒则无咎而亨。',
+  33:'「遁：亨，小利贞。」天下有山，远遁之象。阴长阳退之时，退避全身则亨，处小事守正则利。',
+  34:'「大壮：利贞。」雷在天上，刚以动而壮盛。阳气方壮，宜以正驭壮，不可恃强妄动。',
+  35:'「晋：康侯用锡马蕃庶，昼日三接。」日出地上，明出而进。晋升荣显之象，进而受赏，顺行则吉。',
+  36:'「明夷：利艰贞。」明入地中，光明见伤。贤者遭难之世，晦其明而内守其正，艰贞自处则利。',
+  37:'「家人：利女贞。」风自火出，教化自内而外。主家庭内外、男女正位，家道整齐则利。',
+  38:'「睽：小事吉。」火炎上、泽润下，二女同居而志不同行。乖离之象，同中存异、以和化睽，小事可吉。',
+  39:'「蹇：利西南，不利东北。」山上有水，险阻难进。跛足蹇滞之象，宜反身修德、结援而济，不可强行。',
+  40:'「解：利西南。无所往，其来复吉。」雷雨作而百果草木皆甲坼。险散难解之象，难关既脱，宜宽舒安处。',
+  41:'「损：有孚，元吉，无咎。」山下有泽，损下益上。损己利人、先损后益，诚信则大吉。',
+  42:'「益：利有攸往，利涉大川。」风雷相益，损上益下。施惠得众之象，民悦无疆，利兴大业。',
+  43:'「夬：扬于王庭，孚号有厉。」泽上于天，刚决去柔。光明正大、决而能和之象，防危不可冒进。',
+  44:'「姤：女壮，勿用取女。」天下有风，一阴遇五阳。不期而遇之象，阴势方萌，宜防微杜渐。',
+  45:'「萃：亨。王假有庙，利见大人。」泽上于地，聚而成众。会聚之象，聚人以正、敬事告祖，利见大人则亨。',
+  46:'「升：元亨，用见大人，勿恤。」地中生木，积小以成高大。上升之象，循序自进，自然成长则亨。',
+  47:'「困：亨，贞，大人吉。」泽无水，困乏之象。处困而守正不移，惟大人能困而不失其所亨。',
+  48:'「井：改邑不改井，无丧无得，往来井井。」木上有水，井养而不穷。守常济人之象，修养其身、源清流洁。',
+  49:'「革：巳日乃孚，元亨利贞。」泽中有火，水火相息。变革之象，时至而革、顺天应人，则元亨利贞。',
+  50:'「鼎：元吉，亨。」木上有火，烹饪致养。鼎新之象，革故取新、养贤任能，大吉而亨。',
+  51:'「震：亨。震来虩虩，笑言哑哑。」洊雷发声，震惊百里。主动荡惊惧，临震不改其度，方能有为。',
+  52:'「艮其背，不获其身；行其庭，不见其人。」兼山两重，止之又止。时止则止、时行则行，知止则无咎。',
+  53:'「渐：女归吉，利贞。」山上有木，徐徐而长。循序渐进之象，如女子待礼而行，渐进则吉。',
+  54:'「归妹：征凶，无攸利。」泽上有雷，少女从长男。出嫁失序、躁进相从之象，妄动则凶。',
+  55:'「丰：王假之，勿忧，宜日中。」雷电皆至，盛大光明。丰大之象，盛极宜守中，如日中则昃。',
+  56:'「旅：小亨，旅贞吉。」山上有火，止而附明。羁旅在外之象，柔顺小心、守正自处则小亨。',
+  57:'「巽：小亨，利有攸往，利见大人。」随风相济，柔顺而入。谦顺申命之象，以柔行事，随顺则亨。',
+  58:'「兑：亨，利贞。」丽泽相滋，朋友讲习。和悦之象，以正相悦、外柔内刚则亨。',
+  59:'「涣：亨。王假有庙，利涉大川。」风行水上，涣然冰释。离散之象，济涣之道在聚拢人心、涉险有助。',
+  60:'「节：亨。苦节不可贞。」泽上有水，盈满宜节。节制有度则通，过苦之节难以为继。',
+  61:'「中孚：豚鱼吉，利涉大川。」泽上有风，中心笃实。至诚感物之象，信及豚鱼，可涉险难。',
+  62:'「小过：亨，利贞。可小事，不可大事。」山上有雷，声过其常。宜小不宜大、宜下不宜上，小事亨而大事凶。',
+  63:'「既济：亨，小利贞。初吉终乱。」水在火上，阴阳各当其位。事功已成之象，守成维艰，防初吉终乱。',
+  64:'「未济：亨。小狐汔济，濡其尾。」火在水上，事未竟而将济。慎终如始、进退有度，虽未济而终可济。'
+};
+
+/* 卦画：上卦三爻反序接下卦三爻反序（自上而下渲染） */
+function hxLines(h){
+  const [, , , up, low] = h;
+  return [...TRIG[up][1]].reverse().concat([...TRIG[low][1]].reverse());
+}
+function hexHTML(h, mini){
+  return `<div class="hex${mini?' hx-mini':''}">`+
+    hxLines(h).map(b=>b?'<div class="yao"></div>':'<div class="yao yin"><i></i><i></i></div>').join('')+
+    `</div>`;
+}
+const $ = s=>document.querySelector(s);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ===== 出题 ===== */
+let mode='toname', cur=null, qn=0, right=0, streak=0, answered=false;
+
+function newQuestion(){
+  const h = HX[Math.floor(Math.random()*HX.length)];
+  const others = shuffle(HX.filter(x=>x[0]!==h[0])).slice(0,3);
+  cur = {h, items:shuffle([h,...others])};
+  qn++;
+  $('#q-num').textContent = qn;
+  $('#q-total').textContent = qn;
+  if(mode==='toname'){
+    $('#q-fig').innerHTML = hexHTML(h);
+    $('#q-suffix').textContent = '此卦之名为？';
+    $('#opts').innerHTML = cur.items.map((it,i)=>
+      `<button class="opt" data-i="${i}"><span class="kbd">${'ABCD'[i]}</span>${it[1]}</button>`).join('');
+  }else{
+    $('#q-fig').innerHTML = `<div class="q-name">${h[1]}</div><div class="q-alias">${h[2]} · 第${h[0]}卦</div>`;
+    $('#q-suffix').textContent = '此名对应之卦象为？';
+    $('#opts').innerHTML = cur.items.map((it,i)=>
+      `<button class="opt opt-fig" data-i="${i}"><span class="kbd">${'ABCD'[i]}</span>${hexHTML(it,true)}</button>`).join('');
+  }
+  $('#fb').className = 'quiz-fb';
+  $('#fb').innerHTML = '';
+  $('#btn-next').hidden = true;
+  answered = false;
+}
+
+function pick(i){
+  if(answered || !cur) return;
+  answered = true;
+  const {h, items} = cur;
+  const ok = items[i][0]===h[0];
+  if(ok){right++;streak++;}else{streak=0;}
+  $('#q-right').textContent = right;
+  $('#q-streak').textContent = streak;
+  document.querySelectorAll('#opts .opt').forEach((b,idx)=>{
+    b.disabled = true;
+    if(items[idx][0]===h[0]) b.classList.add('correct');
+    else if(idx===i) b.classList.add('wrong');
+  });
+  const [n,name,alias,up,low] = h;
+  $('#fb').className = 'quiz-fb '+(ok?'ok':'no');
+  $('#fb').innerHTML =
+    `<span class="verdict">${ok?'✓ 正确':'✗ 错误'}</span>`+
+    `第${n}卦 <b>${name}</b>（${alias}）——${up}上${low}下：上卦${up}为${TRIG[up][0]}，下卦${low}为${TRIG[low][0]}。`+
+    `<span class="det">${DETAIL[n]}</span>`;
+  $('#btn-next').hidden = false;
+}
+
+$('#opts').addEventListener('click',e=>{
+  const b = e.target.closest('.opt');
+  if(b) pick(+b.dataset.i);
+});
+$('#btn-next').addEventListener('click',newQuestion);
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter' && !$('#btn-next').hidden){newQuestion();return;}
+  if(answered) return;
+  const map = {'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3};
+  const k = e.key.toLowerCase();
+  if(k in map) pick(map[k]);
+});
+/* 模式切换 */
+document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>{
+  if(mode===b.dataset.mode) return;
+  mode = b.dataset.mode;
+  document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('active',x===b));
+  newQuestion();
+}));
+
+/* ===== 总览与详情弹窗 ===== */
+$('#hx-grid').innerHTML = HX.map(h=>
+  `<button class="hx-cell" data-n="${h[0]}">${hexHTML(h,true)}<span>${h[1]}</span></button>`).join('');
+
+$('#hx-grid').addEventListener('click',e=>{
+  const c = e.target.closest('.hx-cell');
+  if(!c) return;
+  const h = HX.find(x=>x[0]===+c.dataset.n);
+  $('#modal-head').innerHTML =
+    `<span class="m-combo">第${h[0]}卦 · ${h[2]}</span><span class="m-name">${h[1]}</span>`;
+  $('#modal-body').innerHTML =
+    hexHTML(h) +
+    `<div class="m-info">上卦 <b>${h[3]}</b>（${TRIG[h[3]][0]}）· 下卦 <b>${h[4]}</b>（${TRIG[h[4]][0]}）</div>`+
+    `<div class="m-detail">${DETAIL[h[0]]}</div>`;
+  $('#modal').hidden = false;
+});
+const closeModal = ()=>$('#modal').hidden = true;
+$('#modal-close').addEventListener('click',closeModal);
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+newQuestion();
+</script>
+</body>
+</html>
