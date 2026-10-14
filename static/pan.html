@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>奇门排盘 · 时家转盘拆补法</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ===== 排盘页专属样式 ===== */
+.ctrl-card{max-width:780px;margin:0 auto;text-align:center}
+.ctrl-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+input[type="datetime-local"]{font-family:inherit;font-size:15px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:9px 14px;letter-spacing:.05em}
+input[type="datetime-local"]:focus{outline:none;border-color:var(--gold)}
+.btn-ghost{font-family:inherit;font-size:15px;letter-spacing:.2em;padding:9px 22px;color:var(--ink-soft);background:none;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:.15s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.ctrl-note{margin-top:12px;font-size:12.5px;color:var(--muted);letter-spacing:.06em}
+
+/* ===== 信息条 ===== */
+.info-card{max-width:780px;margin:0 auto}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px 18px}
+.info-item{font-size:14.5px;line-height:1.9}
+.info-item .lb{color:var(--muted);font-size:12.5px;letter-spacing:.2em;display:block}
+.info-item .vl{color:var(--ink);letter-spacing:.06em}
+.info-item .vl b{color:var(--cinnabar);font-weight:600}
+.info-item .vl i{color:var(--gold);font-style:normal}
+.info-warn{color:var(--cinnabar)}
+
+/* ===== 九宫盘 ===== */
+.pan-wrap{max-width:900px;margin:0 auto}
+.pan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:640px){.pan-grid{gap:6px}}
+.pal{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;min-height:128px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 3px 14px rgba(0,0,0,.35)}
+.pal.hl{border-color:var(--gold)}
+.pal-top{display:flex;align-items:center;justify-content:space-between;min-height:20px}
+.god{font-size:13.5px;color:var(--cinnabar);letter-spacing:.15em}
+.badges{display:flex;gap:5px}
+.bd{font-size:11px;font-style:normal;line-height:1;padding:2px 6px;border-radius:4px;border:1px solid var(--muted);color:var(--muted);letter-spacing:.1em}
+.bd.horse{border-color:var(--gold);color:var(--gold)}
+.pal-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.star{font-size:14.5px;color:var(--ink-soft);letter-spacing:.1em}
+.gate{font-size:14.5px;color:var(--ink-soft);letter-spacing:.1em}
+.zs{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:400;color:var(--paper);background:var(--gold);border-radius:3px;padding:1px 5px;vertical-align:2px;letter-spacing:.05em}
+.tg{font-family:var(--kai);line-height:1}
+.tg.big{font-size:34px}
+.tg.di{font-size:22px;opacity:.85}
+.wx-mu{color:#8cc79b}.wx-huo{color:#e06550}.wx-tu{color:#d4b06a}.wx-jin{color:#cfd6e4}.wx-shui{color:#7fb3d8}
+.tg-pair{display:flex;gap:8px;align-items:baseline}
+.tg-pair .sub{font-size:15px;opacity:.7}
+.pal-foot{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);letter-spacing:.18em;text-align:center}
+.pal.center{align-items:center;justify-content:center;text-align:center;row-gap:6px}
+.pal.center .c-name{font-family:var(--kai);font-size:19px;color:var(--muted);letter-spacing:.3em}
+.pal.center .c-note{font-size:12px;color:var(--muted);letter-spacing:.1em;line-height:1.9}
+.pan-legend{max-width:900px;margin:14px auto 0;color:var(--muted);font-size:12.5px;letter-spacing:.06em;line-height:2;text-align:center}
+.pan-legend b{color:var(--gold);font-weight:600}
+
+/* ===== 起局问事弹窗 ===== */
+.modal-mask{position:fixed;inset:0;background:rgba(4,8,14,.65);display:flex;align-items:center;justify-content:center;padding:24px;z-index:50}
+.modal-mask[hidden]{display:none}
+.modal-card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:420px;width:100%;padding:26px 28px 22px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.modal-close{position:absolute;top:12px;right:14px;width:30px;height:30px;background:none;border:none;font-size:17px;color:var(--muted);cursor:pointer;border-radius:6px;transition:.15s}
+.modal-close:hover{color:var(--cinnabar);background:rgba(224,101,80,.08)}
+.ask-title{font-family:var(--kai);font-size:20px;letter-spacing:.2em;text-align:center;color:var(--ink)}
+.ask-sub{margin-top:8px;text-align:center;font-size:12.5px;color:var(--muted);letter-spacing:.08em;line-height:1.9}
+.ask-input{margin-top:16px;width:100%;font-family:inherit;font-size:15px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:10px 14px;letter-spacing:.05em}
+.ask-input::placeholder{color:var(--muted)}
+.ask-input:focus{outline:none;border-color:var(--gold)}
+.ask-actions{margin-top:16px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="seal">盘</div>
+  <h1>奇门排盘</h1>
+  <div class="sub">时家转盘 · 拆补法</div>
+  <div class="divider">❖</div>
+  <nav>
+    <a href="index.html">首　页</a>
+    <a href="basics.html">卦象知识</a>
+    <a href="qimen.html">奇门练习</a>
+    <a class="active" href="pan.html">奇门排盘</a>
+    <a href="changsheng.html">长生练习</a>
+    <a href="gua64.html">六十四卦</a>
+    <a href="#">占筮记录</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section>
+    <div class="sec-title"><h2>起局</h2><span class="tag">公历输入</span></div>
+    <p class="sec-desc">依公历时刻排时家转盘奇门。以交节时刻定阴阳遁与局数，以日干支符头定三元，是为拆补之法。历法推算由 tyme4ts 提供。</p>
+    <div class="card ctrl-card">
+      <div class="ctrl-row">
+        <input type="datetime-local" id="dt" step="1" />
+        <button class="btn-primary" id="btn-run">排　盘</button>
+        <button class="btn-ghost" id="btn-now">此　刻</button>
+      </div>
+      <div class="ctrl-note">拆补法：交节即换局，符头（甲己之日）定上中下三元，不置闰。点击「排盘」后填写所测何事（可留空），再出盘。</div>
+    </div>
+  </section>
+
+  <div id="result" hidden>
+  <section>
+    <div class="sec-title"><h2>局象</h2><span class="tag" id="ju-tag">—</span></div>
+    <div class="card info-card"><div class="info-grid" id="info"></div></div>
+  </section>
+
+  <section>
+    <div class="sec-title"><h2>九宫盘式</h2><span class="tag">转盘</span></div>
+    <div class="pan-wrap">
+      <div class="pan-grid" id="pan"></div>
+      <div class="pan-legend">每宫：左上八神、右上<b>空</b>亡<b>马</b>星标记；左列九星、八门（金字签为值使门），右列上为<b>天盘干</b>、下为地盘干。天禽随天芮，同宫并见。中五宫地盘干寄坤二宫。</div>
+    </div>
+  </section>
+  </div>
+</main>
+
+<footer class="wrap">
+  <div class="m">阴阳顺逆要精通，三元积数成六纪。</div>
+  <div>易经研习 · 奇门遁甲排盘（时家转盘 · 拆补法）</div>
+</footer>
+
+<div class="modal-mask" id="ask-mask" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="ask-title">
+    <button class="modal-close" id="ask-close" title="关闭">✕</button>
+    <div class="ask-title" id="ask-title">所测何事</div>
+    <div class="ask-sub">占问之事，可留空直接起局</div>
+    <input type="text" class="ask-input" id="ask-input" placeholder="如：问工作调动、问出行吉凶…（可留空）" autocomplete="off" />
+    <div class="ask-actions"><button class="btn-primary" id="ask-ok">起　局</button></div>
+  </div>
+</div>
+
+<script src="lib/tyme.js"></script>
+<script>
+/* tyme.js 已在全局声明 SolarTime、SolarTerm 等类，无需再从 exports 解构 */
+
+/* ===== 基础数据 ===== */
+const STEMS = '甲乙丙丁戊己庚辛壬癸';
+const BRANCHES = '子丑寅卯辰巳午未申酉戌亥';
+const JIAZI = Array.from({length:60}, (_, i) => STEMS[i % 10] + BRANCHES[i % 12]);
+const RING = [1, 8, 3, 4, 9, 2, 7, 6];                       // 宫环（转盘旋转序）
+const STAR = {1:'蓬', 2:'芮', 3:'冲', 4:'辅', 5:'禽', 6:'心', 7:'柱', 8:'任', 9:'英'};
+const GATE = {1:'休', 2:'死', 3:'伤', 4:'杜', 6:'开', 7:'惊', 8:'生', 9:'景'};
+const GATES = ['休','生','伤','杜','景','死','惊','开'];
+const GODS = ['值符','腾蛇','太阴','六合','白虎','玄武','九地','九天'];
+const XUNYI = {'甲子':'戊','甲戌':'己','甲申':'庚','甲午':'辛','甲辰':'壬','甲寅':'癸'};
+const SEQ = ['戊','己','庚','辛','壬','癸','丁','丙','乙'];   // 布地盘序列（六仪三奇）
+const YANG = {'冬至':[1,7,4],'小寒':[2,8,5],'大寒':[3,9,6],'立春':[8,5,2],'雨水':[9,6,3],'惊蛰':[1,7,4],'春分':[3,9,6],'清明':[4,1,7],'谷雨':[5,2,8],'立夏':[4,1,7],'小满':[5,2,8],'芒种':[6,3,9]};
+const YIN  = {'夏至':[9,3,6],'小暑':[8,2,5],'大暑':[7,1,4],'立秋':[2,5,8],'处暑':[1,4,7],'白露':[9,3,6],'秋分':[7,1,4],'寒露':[6,9,3],'霜降':[5,8,2],'立冬':[6,9,3],'小雪':[5,8,2],'大雪':[4,7,1]};
+const BR2PAL = {子:1,丑:8,寅:8,卯:3,辰:4,巳:4,午:9,未:2,申:2,酉:7,戌:6,亥:6};
+const HORSE = {申:'寅',子:'寅',辰:'寅',寅:'申',午:'申',戌:'申',巳:'亥',酉:'亥',丑:'亥',亥:'巳',卯:'申',未:'巳'}; // 卯→申沿袭 csp（传统作巳）
+const PAL_NAME = {1:'坎一宫',2:'坤二宫',3:'震三宫',4:'巽四宫',5:'中五宫',6:'乾六宫',7:'兑七宫',8:'艮八宫',9:'离九宫'};
+const PAL_BR = {1:'子',2:'未申',3:'卯',4:'辰巳',5:'',6:'戌亥',7:'酉',8:'丑寅',9:'午'};
+const WX = {甲:'mu',乙:'mu',丙:'huo',丁:'huo',戊:'tu',己:'tu',庚:'jin',辛:'jin',壬:'shui',癸:'shui'};
+const NUM = ['','一','二','三','四','五','六','七','八','九'];
+
+/* ===== 定位当前节气（jd 之前最近的一个） ===== */
+function findTerm(jd) {
+  let t = SolarTerm.fromName(2026, '冬至');
+  while (t.getJulianDay().getDay() > jd) t = t.next(-1);
+  while (t.next(1).getJulianDay().getDay() <= jd) t = t.next(1);
+  return t;
+}
+
+/* ===== 排盘主流程（拆补法） ===== */
+function paipan(y, m, d, h, mi, se) {
+  const st = SolarTime.fromYmdHms(y, m, d, h, mi, se);
+  const lh = st.getLunarHour();
+  const pillars = [lh.getYearSixtyCycle().getName(), lh.getMonthSixtyCycle().getName(),
+                   lh.getDaySixtyCycle().getName(), lh.getSixtyCycle().getName()];
+  const lunar = lh.getLunarDay().toString();
+  const jd = st.getJulianDay().getDay();
+
+  // 阴阳遁：以当前节气定
+  const term = findTerm(jd), termName = term.getName();
+  const isYang = termName in YANG;
+  const juTable = isYang ? YANG : YIN;
+
+  // 三元：符头（甲己日）之支定上中下
+  const ds = STEMS.indexOf(pillars[2][0]), db = BRANCHES.indexOf(pillars[2][1]);
+  const futou = (db - (ds % 5) + 12) % 12;
+  const yuan = [0,3,6,9].includes(futou) ? 0 : ([2,5,8,11].includes(futou) ? 1 : 2);
+  const ju = juTable[termName][yuan];
+
+  // 地盘：阳遁顺布（宫数递增），阴遁逆布（宫数递减）
+  const dipan = {};
+  SEQ.forEach((g, i) => {
+    let p = isYang ? ju + i : ju - i;
+    while (p > 9) p -= 9; while (p < 1) p += 9;
+    dipan[p] = g;
+  });
+
+  // 旬首 → 遁仪 → 值符宫
+  const hs = STEMS.indexOf(pillars[3][0]), hb = BRANCHES.indexOf(pillars[3][1]);
+  const hi = JIAZI.indexOf(pillars[3]);
+  const xunshou = JIAZI[Math.floor(hi / 10) * 10];
+  const xunyi = XUNYI[xunshou];
+  const zfPalace = +Object.keys(dipan).find(p => dipan[p] === xunyi);
+  const zfEff = zfPalace === 5 ? 2 : zfPalace;               // 中宫寄坤二
+  const zhiFuStar = STAR[zfPalace];
+  const zhiShiGate = GATE[zfEff];
+
+  // 天盘：值符加时干（甲时加遁仪），诸星携地盘干沿宫环同转
+  const targetStem = hs === 0 ? xunyi : STEMS[hs];
+  const targetPalace = +Object.keys(dipan).find(p => dipan[p] === targetStem);
+  const shift = RING.indexOf(targetPalace) - RING.indexOf(zfEff);
+  const tianpan = {}, stars = {};
+  RING.forEach((home, i) => {
+    const p = RING[(i + shift + 8) % 8];
+    stars[p] = STAR[home];
+    tianpan[p] = dipan[home];
+    if (home === 2) { stars[p] += '/禽'; tianpan[p] += '/' + dipan[5]; } // 禽随芮，携中宫干
+  });
+
+  // 八门：值使自原值符宫（含中宫）起走 n 步（阳顺阴逆，过中宫），落中宫则寄坤二
+  let g = zfPalace;
+  const n = hi % 10;
+  for (let k = 0; k < n; k++) {
+    g += isYang ? 1 : -1;
+    if (g > 9) g = 1; if (g < 1) g = 9;
+  }
+  const gp = g === 5 ? 2 : g;
+  const gates = {};
+  const gi = GATES.indexOf(zhiShiGate), gr = RING.indexOf(gp);
+  GATES.forEach((g, k) => { gates[RING[(gr + k - gi + 16) % 8]] = g; });
+
+  // 八神：自天盘值符落宫起（阳顺阴逆）
+  const gods = {};
+  const sr = RING.indexOf(targetPalace);
+  GODS.forEach((g, k) => { gods[RING[(sr + (isYang ? k : -k) + 16) % 8]] = g; });
+
+  // 旬空 / 马星 / 五不遇时
+  const b0 = BRANCHES.indexOf(xunshou[1]);
+  const kong = [BRANCHES[(b0 + 10) % 12], BRANCHES[(b0 + 11) % 12]];
+  const kongPal = [...new Set(kong.map(b => BR2PAL[b]))];
+  const horse = HORSE[BRANCHES[hb]], horsePal = BR2PAL[horse];
+  const wuBuYu = hs === (ds + 6) % 10;
+
+  return { pillars, lunar, termName, isYang, yuan, ju, dipan, tianpan, stars, gates, gods,
+           zhiFuStar, zhiShiGate, zfPalace, targetPalace, gatePalace: gp,
+           xunshou, xunyi, kong, kongPal, horse, horsePal, wuBuYu };
+}
+
+/* ===== 渲染 ===== */
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function tgHtml(s, cls) {   // 干字符，带五行色；支持 "癸/庚" 双干
+  const parts = s.split('/');
+  const main = `<span class="tg ${cls} wx-${WX[parts[0]]}">${parts[0]}</span>`;
+  if (parts.length === 1) return main;
+  return `<span class="tg-pair">${main}<span class="tg sub wx-${WX[parts[1]]}">${parts[1]}</span></span>`;
+}
+
+function render(r, when, question) {
+  const YUAN = ['上元','中元','下元'];
+  document.getElementById('ju-tag').textContent =
+    `${r.isYang ? '阳遁' : '阴遁'}${NUM[r.ju]}局 · ${r.termName}${YUAN[r.yuan]}`;
+
+  const info = [
+    ['所测之事', question ? esc(question) : '<span style="color:var(--muted)">（未填）</span>'],
+    ['公历', when],
+    ['农历', r.lunar.replace(/^农历/, '')],
+    ['四柱', r.pillars.join('　')],
+    ['节气 · 三元', `${r.termName} · ${YUAN[r.yuan]}`],
+    ['局数', `<b>${r.isYang ? '阳遁' : '阴遁'} ${NUM[r.ju]} 局</b>`],
+    ['旬首 · 遁仪', `${r.xunshou}（遁 <i>${r.xunyi}</i>）`],
+    ['值符', `天${r.zhiFuStar}星${r.zfPalace === 5 ? '（寄坤二宫）' : ''} → 落${PAL_NAME[r.targetPalace]}`],
+    ['值使', `${r.zhiShiGate}门 → 落${PAL_NAME[r.gatePalace]}`],
+    ['旬空', `${r.kong.join(' ')}（${r.kongPal.map(p => PAL_NAME[p]).join('、')}）`],
+    ['马星', `${r.horse}（${PAL_NAME[r.horsePal]}）`],
+    ['五不遇时', r.wuBuYu ? '<span class="info-warn">是 · 时干克日干，诸事不宜</span>' : '否'],
+  ];
+  document.getElementById('info').innerHTML = info.map(([lb, vl]) =>
+    `<div class="info-item"><span class="lb">${lb}</span><span class="vl">${vl}</span></div>`).join('');
+
+  const LAYOUT = [4, 9, 2, 3, 5, 7, 8, 1, 6];
+  document.getElementById('pan').innerHTML = LAYOUT.map(p => {
+    if (p === 5) {
+      return `<div class="pal center">
+        <div class="c-name">中五宫</div>
+        <div class="c-note">地盘 ${tgHtml(r.dipan[5], 'di')}<br>天禽寄坤二宫</div>
+      </div>`;
+    }
+    const badges = [
+      r.kongPal.includes(p) ? '<i class="bd">空</i>' : '',
+      r.horsePal === p ? '<i class="bd horse">马</i>' : '',
+    ].join('');
+    const hl = p === r.targetPalace ? ' hl' : '';
+    const zs = p === r.gatePalace ? '<b class="zs">值使</b>' : '';
+    return `<div class="pal${hl}">
+      <div class="pal-top"><span class="god">${r.gods[p]}</span><span class="badges">${badges}</span></div>
+      <div class="pal-row"><span class="star">天${r.stars[p].replace('/', ' / 天')}</span>${tgHtml(r.tianpan[p], 'big')}</div>
+      <div class="pal-row"><span class="gate">${r.gates[p]}门${zs}</span>${tgHtml(r.dipan[p], 'di')}</div>
+      <div class="pal-foot">${PAL_NAME[p]} · ${PAL_BR[p]}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ===== 交互 ===== */
+const dtEl = document.getElementById('dt');
+const resultEl = document.getElementById('result');
+const askMask = document.getElementById('ask-mask');
+const askInput = document.getElementById('ask-input');
+let pending = null;          // 待起局的时刻参数与显示文本
+
+function toLocalValue(d) {
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+/* 点击排盘：先问所测何事，确认后再出盘 */
+function run() {
+  const v = dtEl.value;
+  if (!v) return;
+  const [date, time] = v.split('T');
+  const [y, m, d] = date.split('-').map(Number);
+  const [h, mi, se] = time.split(':').map(Number);
+  const s = se || 0;                       // 秒可缺省，按 0 计
+  const pad = n => String(n).padStart(2, '0');
+  pending = {
+    args: [y, m, d, h, mi, s],
+    when: `${y} 年 ${m} 月 ${d} 日 ${pad(h)}:${pad(mi)}:${pad(s)}`,
+  };
+  askInput.value = '';
+  askMask.hidden = false;
+  askInput.focus();
+}
+
+function closeAsk() { askMask.hidden = true; pending = null; }
+
+function confirmAsk() {
+  if (!pending) return;
+  const question = askInput.value.trim();
+  const { args, when } = pending;
+  askMask.hidden = true;
+  pending = null;
+  render(paipan(...args), when, question);
+  resultEl.hidden = false;
+}
+
+document.getElementById('btn-run').addEventListener('click', run);
+document.getElementById('btn-now').addEventListener('click', () => { dtEl.value = toLocalValue(new Date()); run(); });
+dtEl.addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+
+document.getElementById('ask-ok').addEventListener('click', confirmAsk);
+document.getElementById('ask-close').addEventListener('click', closeAsk);
+askMask.addEventListener('click', e => { if (e.target === askMask) closeAsk(); });
+askInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); confirmAsk(); }
+  if (e.key === 'Escape') closeAsk();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !askMask.hidden) closeAsk(); });
+
+dtEl.value = toLocalValue(new Date());   // 仅预填当前时刻，不自动排盘
+</script>
+</body>
+</html>
