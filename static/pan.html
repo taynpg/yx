@@ -65,6 +65,43 @@ input[type="datetime-local"]:focus{outline:none;border-color:var(--gold)}
 .ask-input::placeholder{color:var(--muted)}
 .ask-input:focus{outline:none;border-color:var(--gold)}
 .ask-actions{margin-top:16px;text-align:center}
+
+/* ===== 存盘与分析 ===== */
+.save-card{max-width:900px;margin:0 auto}
+.save-ta{width:100%;font-family:inherit;font-size:14.5px;line-height:2;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;letter-spacing:.05em;resize:vertical}
+.save-ta::placeholder{color:var(--muted)}
+.save-ta:focus{outline:none;border-color:var(--gold)}
+.save-row{margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.save-status{font-size:13px;color:var(--muted);letter-spacing:.08em}
+.save-status.ok{color:var(--gold)}
+
+/* ===== 历史排盘 ===== */
+.hist-card{max-width:900px;margin:0 auto}
+.hist-search{margin-bottom:16px}
+.hist-search input{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:9px;padding:10px 14px;letter-spacing:.05em}
+.hist-search input::placeholder{color:var(--muted)}
+.hist-search input:focus{outline:none;border-color:var(--gold)}
+.hist-list{display:flex;flex-direction:column;gap:12px}
+.hist-empty{color:var(--muted);font-size:13.5px;text-align:center;padding:18px 0;letter-spacing:.08em}
+.rec{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:13px 16px 12px}
+.rec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rec-ju{font-family:var(--kai);font-size:16.5px;color:var(--cinnabar);letter-spacing:.1em}
+.rec-when{font-size:12.5px;color:var(--muted);letter-spacing:.06em}
+.rec-q{margin-top:8px;font-size:14.5px;color:var(--ink);letter-spacing:.05em;line-height:1.85}
+.rec-none{color:var(--muted);font-size:13px}
+.rec-a{margin-top:8px;font-size:13.5px;color:var(--ink-soft);line-height:2.05;white-space:pre-wrap;border-top:1px dashed var(--line);padding-top:8px}
+.rec-foot{margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);letter-spacing:.06em}
+.rec-ops{display:flex;gap:8px}
+.mini-btn{font-family:inherit;font-size:12.5px;letter-spacing:.1em;padding:4px 13px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:6px;cursor:pointer;transition:.15s}
+.mini-btn:hover{border-color:var(--gold);color:var(--gold)}
+.mini-btn.del:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+
+/* ===== 分页条 ===== */
+.hist-pager{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.pager-btn{font-family:inherit;font-size:12.5px;letter-spacing:.08em;padding:5px 13px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:6px;cursor:pointer;transition:.15s}
+.pager-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.pager-btn:disabled{opacity:.4;cursor:default;color:var(--muted)}
+.pager-info{font-size:12.5px;color:var(--muted);letter-spacing:.1em}
 </style>
 </head>
 <body>
@@ -112,7 +149,29 @@ input[type="datetime-local"]:focus{outline:none;border-color:var(--gold)}
       <div class="pan-legend">每宫：左上八神、右上<b>空</b>亡<b>马</b>星标记；左列九星、八门（金字签为值使门），右列上为<b>天盘干</b>、下为地盘干。天禽随天芮，同宫并见。中五宫地盘干寄坤二宫。</div>
     </div>
   </section>
+
+  <section>
+    <div class="sec-title"><h2>存盘</h2><span class="tag">记录此局</span></div>
+    <p class="sec-desc">填写简要分析（可留空），连同所测何事、盘之时刻一并存入服务器文件（data/records.json），日后可在下方历史中检索、载入。</p>
+    <div class="card save-card">
+      <textarea class="save-ta" id="analysis" rows="3" placeholder="简要分析：格局吉凶、用神落宫、克应断语…（可留空）"></textarea>
+      <div class="save-row">
+        <button class="btn-primary" id="btn-save">保存此盘</button>
+        <span class="save-status" id="save-status"></span>
+      </div>
+    </div>
+  </section>
   </div>
+
+  <section>
+    <div class="sec-title"><h2>历史排盘</h2><span class="tag" id="hist-tag">—</span></div>
+    <p class="sec-desc">每条记录含排盘（保存）时间、盘之时刻、所测何事与简要分析，可按任一字段检索。</p>
+    <div class="card hist-card">
+      <div class="hist-search"><input type="text" id="hist-q" placeholder="搜索：所测之事 / 分析 / 日期 / 局数…" autocomplete="off" /></div>
+      <div class="hist-list" id="hist-list"></div>
+      <div class="hist-pager" id="hist-pager" hidden></div>
+    </div>
+  </section>
 </main>
 
 <footer class="wrap">
@@ -153,6 +212,7 @@ const PAL_NAME = {1:'坎一宫',2:'坤二宫',3:'震三宫',4:'巽四宫',5:'中
 const PAL_BR = {1:'子',2:'未申',3:'卯',4:'辰巳',5:'',6:'戌亥',7:'酉',8:'丑寅',9:'午'};
 const WX = {甲:'mu',乙:'mu',丙:'huo',丁:'huo',戊:'tu',己:'tu',庚:'jin',辛:'jin',壬:'shui',癸:'shui'};
 const NUM = ['','一','二','三','四','五','六','七','八','九'];
+const YUAN = ['上元','中元','下元'];
 
 /* ===== 定位当前节气（jd 之前最近的一个） ===== */
 function findTerm(jd) {
@@ -251,10 +311,12 @@ function tgHtml(s, cls) {   // 干字符，带五行色；支持 "癸/庚" 双�
   return `<span class="tg-pair">${main}<span class="tg sub wx-${WX[parts[1]]}">${parts[1]}</span></span>`;
 }
 
+function juTagOf(r) {
+  return `${r.isYang ? '阳遁' : '阴遁'}${NUM[r.ju]}局 · ${r.termName}${YUAN[r.yuan]}`;
+}
+
 function render(r, when, question) {
-  const YUAN = ['上元','中元','下元'];
-  document.getElementById('ju-tag').textContent =
-    `${r.isYang ? '阳遁' : '阴遁'}${NUM[r.ju]}局 · ${r.termName}${YUAN[r.yuan]}`;
+  document.getElementById('ju-tag').textContent = juTagOf(r);
 
   const info = [
     ['所测之事', question ? esc(question) : '<span style="color:var(--muted)">（未填）</span>'],
@@ -301,11 +363,37 @@ const dtEl = document.getElementById('dt');
 const resultEl = document.getElementById('result');
 const askMask = document.getElementById('ask-mask');
 const askInput = document.getElementById('ask-input');
+const analysisEl = document.getElementById('analysis');
+const saveStatusEl = document.getElementById('save-status');
+const histListEl = document.getElementById('hist-list');
+const histPagerEl = document.getElementById('hist-pager');
+const histTagEl = document.getElementById('hist-tag');
+const histQEl = document.getElementById('hist-q');
 let pending = null;          // 待起局的时刻参数与显示文本
+let current = null;          // 当前盘面：{ args, when, question, juTag }
 
+const pad = n => String(n).padStart(2, '0');
 function toLocalValue(d) {
-  const p = n => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+function toLocalFromArgs(a) {
+  return `${a[0]}-${pad(a[1])}-${pad(a[2])}T${pad(a[3])}:${pad(a[4])}:${pad(a[5] || 0)}`;
+}
+function stampText(ms) {   // 保存时间戳 → 文本
+  const d = new Date(ms);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+/* 出盘并复位存盘区 */
+function showPan(args, when, question) {
+  const a = [args[0], args[1], args[2], args[3], args[4], args[5] || 0];
+  const r = paipan(...a);
+  render(r, when, question);
+  current = { args: a, when, question, juTag: juTagOf(r) };
+  resultEl.hidden = false;
+  analysisEl.value = '';
+  saveStatusEl.textContent = '';
+  saveStatusEl.className = 'save-status';
 }
 
 /* 点击排盘：先问所测何事，确认后再出盘 */
@@ -316,7 +404,6 @@ function run() {
   const [y, m, d] = date.split('-').map(Number);
   const [h, mi, se] = time.split(':').map(Number);
   const s = se || 0;                       // 秒可缺省，按 0 计
-  const pad = n => String(n).padStart(2, '0');
   pending = {
     args: [y, m, d, h, mi, s],
     when: `${y} 年 ${m} 月 ${d} 日 ${pad(h)}:${pad(mi)}:${pad(s)}`,
@@ -334,8 +421,7 @@ function confirmAsk() {
   const { args, when } = pending;
   askMask.hidden = true;
   pending = null;
-  render(paipan(...args), when, question);
-  resultEl.hidden = false;
+  showPan(args, when, question);
 }
 
 document.getElementById('btn-run').addEventListener('click', run);
@@ -351,7 +437,160 @@ askInput.addEventListener('keydown', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !askMask.hidden) closeAsk(); });
 
+/* ===== 存盘与历史（后端 JSON 文件持久化） ===== */
+const API = 'api/records';   // 相对路径，由 Go 服务提供
+const PAGE_SIZE = 10;        // 每页记录数
+let histPage = 1;            // 历史列表当前页
+let recordsCache = [];       // 最近一次从后端取回的全部记录
+
+async function apiList() {
+  const r = await fetch(API);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const d = await r.json();
+  return Array.isArray(d.records) ? d.records : [];
+}
+async function apiAdd(rec) {
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(rec),
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+}
+async function apiDelete(id) {
+  const r = await fetch(API + '/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+}
+
+/* 从后端拉取记录，再重绘列表；resetPage 为真时回到第 1 页 */
+async function refreshHistory(resetPage) {
+  if (resetPage) histPage = 1;
+  try {
+    recordsCache = await apiList();
+  } catch (e) {
+    histTagEl.textContent = '—';
+    histPagerEl.hidden = true;
+    histListEl.innerHTML = '<div class="hist-empty">无法读取排盘记录：请确认后端服务（Go 服务，:8080）已启动。</div>';
+    return;
+  }
+  renderHistory();
+}
+
+function renderHistory() {
+  const all = recordsCache;
+  const q = histQEl.value.trim().toLowerCase();
+  const list = q
+    ? all.filter(rec => [rec.when, rec.question, rec.analysis, rec.juTag, stampText(rec.savedAt)]
+        .join(' ').toLowerCase().includes(q))
+    : all;
+  histTagEl.textContent = q ? `${list.length} / ${all.length} 条` : `${all.length} 条`;
+
+  if (!all.length) {
+    histListEl.innerHTML = '<div class="hist-empty">尚无记录。排盘后填写简要分析，点击「保存此盘」即可存档。</div>';
+    renderPager(0, 0);
+    return;
+  }
+  if (!list.length) {
+    histListEl.innerHTML = '<div class="hist-empty">未找到匹配的记录。</div>';
+    renderPager(0, 0);
+    return;
+  }
+
+  // 分页：按每页 PAGE_SIZE 条切分
+  const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if (histPage > pages) histPage = pages;
+  if (histPage < 1) histPage = 1;
+  const pageList = list.slice((histPage - 1) * PAGE_SIZE, histPage * PAGE_SIZE);
+
+  histListEl.innerHTML = pageList.map(rec => `
+    <div class="rec">
+      <div class="rec-head"><span class="rec-ju">${esc(rec.juTag || '')}</span><span class="rec-when">${esc(rec.when || '')}</span></div>
+      <div class="rec-q">${rec.question ? esc(rec.question) : '<span class="rec-none">（未填所测之事）</span>'}</div>
+      ${rec.analysis ? `<div class="rec-a">${esc(rec.analysis)}</div>` : ''}
+      <div class="rec-foot"><span class="rec-saved">存于 ${stampText(rec.savedAt)}</span>
+        <span class="rec-ops">
+          <button class="mini-btn" data-load="${rec.id}">载入此盘</button>
+          <button class="mini-btn del" data-del="${rec.id}">删除</button>
+        </span>
+      </div>
+    </div>`).join('');
+
+  renderPager(pages, list.length);
+}
+
+/* 分页条：首页 / 上一页 / 页码 · 条数 / 下一页 / 末页 */
+function renderPager(pages, total) {
+  if (pages <= 1) { histPagerEl.hidden = true; histPagerEl.innerHTML = ''; return; }
+  const dis = b => b ? ' disabled' : '';
+  histPagerEl.hidden = false;
+  histPagerEl.innerHTML = `
+    <button class="pager-btn" data-page="1"${dis(histPage === 1)}>« 首页</button>
+    <button class="pager-btn" data-page="${histPage - 1}"${dis(histPage === 1)}>‹ 上一页</button>
+    <span class="pager-info">第 ${histPage} / ${pages} 页 · 共 ${total} 条</span>
+    <button class="pager-btn" data-page="${histPage + 1}"${dis(histPage === pages)}>下一页 ›</button>
+    <button class="pager-btn" data-page="${pages}"${dis(histPage === pages)}>末页 »</button>`;
+}
+
+document.getElementById('btn-save').addEventListener('click', async () => {
+  if (!current) return;
+  const rec = {
+    id: `p${Date.now()}${Math.floor(Math.random() * 1000)}`,
+    savedAt: Date.now(),
+    args: current.args,
+    when: current.when,
+    question: current.question,
+    analysis: analysisEl.value.trim(),
+    juTag: current.juTag,
+  };
+  saveStatusEl.textContent = '保存中…';
+  saveStatusEl.className = 'save-status';
+  try {
+    await apiAdd(rec);
+    await refreshHistory(true);   // 新记录在最前，回到第 1 页
+    saveStatusEl.textContent = '已保存 ✓';
+    saveStatusEl.className = 'save-status ok';
+  } catch (e) {
+    saveStatusEl.textContent = '保存失败：请确认后端服务已启动';
+    saveStatusEl.className = 'save-status';
+  }
+});
+
+histListEl.addEventListener('click', async e => {
+  const loadId = e.target.getAttribute('data-load');
+  const delId = e.target.getAttribute('data-del');
+  if (loadId) {
+    const rec = recordsCache.find(r => r.id === loadId);
+    if (!rec) return;
+    dtEl.value = toLocalFromArgs(rec.args);
+    showPan(rec.args, rec.when, rec.question);
+    analysisEl.value = rec.analysis || '';
+    saveStatusEl.textContent = `已载入（存于 ${stampText(rec.savedAt)}），如需改动可再存一份`;
+  } else if (delId) {
+    if (!confirm('确定删除这条排盘记录？')) return;
+    try {
+      await apiDelete(delId);
+      await refreshHistory();
+    } catch (e) {
+      alert('删除失败：请确认后端服务已启动');
+    }
+  }
+});
+
+histQEl.addEventListener('input', () => { histPage = 1; renderHistory(); });
+
+histPagerEl.addEventListener('click', e => {
+  const v = e.target.getAttribute('data-page');
+  if (!v) return;
+  histPage = +v;
+  renderHistory();
+});
+
 dtEl.value = toLocalValue(new Date());   // 仅预填当前时刻，不自动排盘
+refreshHistory(true);
 </script>
 </body>
 </html>
